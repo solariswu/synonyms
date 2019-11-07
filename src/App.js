@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import Amplify, { graphqlOperation }  from "aws-amplify";
-import { Connect } from "aws-amplify-react";
+import { withAuthenticator, Connect } from "aws-amplify-react";
 
 import * as queries from './graphql/queries';
+import awsconfig from './appconfig'
 // import * as subscriptions from './graphql/subscriptions';
 
-import awsconfig from './aws-exports';
 Amplify.configure(awsconfig);
 
 class App extends Component {
@@ -33,4 +33,4 @@ class App extends Component {
     }
 } 
 
-export default App;
+export default withAuthenticator(App);
