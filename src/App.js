@@ -7,7 +7,7 @@ import awsconfig from './appconfig'
 // import * as subscriptions from './graphql/subscriptions';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { ToggleButtonGroup, ToggleButton } from 'react-bootstrap';
+import { ToggleButtonGroup, ToggleButton, Button } from 'react-bootstrap';
 
 Amplify.configure(awsconfig);
 
@@ -26,7 +26,13 @@ class App extends Component {
     render() {
         Amplify.Logger.LOG_LEVEL = 'VERBOSE';
 
-        const Hint = ({ content, correctAnswer } ) => {
+        const Submit = ({ correctAnswer }) => {
+            if (this.state.answer === correctAnswer) 
+                return ( <Button> Next </Button>)
+            return (<div />)
+        }
+
+        const Hint = ({ content, correctAnswer }) => {
             if (this.state.answer.length > 0)  
                 if (this.state.answer !== correctAnswer)  
                     return ( <div> Nope! <br/> {content} </div> )
@@ -60,6 +66,7 @@ class App extends Component {
                             <ListView items={listSynonyms.items} /> 
                             <Hint content={listSynonyms.items[0].Hint}
                                   correctAnswer={listSynonyms.items[0].Answer} />
+                            <Submit correctAnswer={listSynonyms.items[0].Answer} />
                         </div>
                     );
                 }}
