@@ -28,7 +28,7 @@ class App extends Component {
 
         const Submit = ({ correctAnswer }) => {
             if (this.state.answer === correctAnswer) 
-                return ( <Button> Next </Button>)
+                return ( <Button variant="success" size="sm"> Next </Button>)
             return (<div />)
         }
 
