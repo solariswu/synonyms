@@ -1,26 +1,36 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
+import Amplify, { graphqlOperation }  from "aws-amplify";
+import { Connect } from "aws-amplify-react";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+import * as queries from './graphql/queries';
+// import * as subscriptions from './graphql/subscriptions';
+
+import awsconfig from './aws-exports';
+Amplify.configure(awsconfig);
+
+class App extends Component {
+
+    render() {
+        // Amplify.Logger.LOG_LEVEL = 'VERBOSE';
+        const ListView = ({ items }) => (
+            <div>
+                <h3>All Words</h3>
+                <ul>
+                    {items.map(item => <li key={item.id}>{item.name} ({item.id})</li>)}
+                </ul>
+            </div>
+        );
+
+        return (
+            <Connect query={graphqlOperation(queries.listSynonyms)}>
+                {({ data: { listSynonyms }, loading, errors }) => {
+                    if (loading || !listSynonyms) return (<h3>Loading...</h3>);
+                    if (errors.lenth > 0 ) return (<h3>Error</h3>);
+                    return (<ListView items={listSynonyms.items} /> );
+                }}
+            </Connect>
+        )
+    }
+} 
 
 export default App;
