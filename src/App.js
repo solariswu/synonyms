@@ -6,18 +6,25 @@ import * as queries from './graphql/queries';
 import awsconfig from './appconfig'
 // import * as subscriptions from './graphql/subscriptions';
 
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { ToggleButtonGroup, ToggleButton } from 'react-bootstrap';
+
 Amplify.configure(awsconfig);
 
 class App extends Component {
 
     render() {
-        // Amplify.Logger.LOG_LEVEL = 'VERBOSE';
+        Amplify.Logger.LOG_LEVEL = 'VERBOSE';
         const ListView = ({ items }) => (
             <div>
                 <h3>All Words</h3>
-                <ul>
-                    {items.map(item => <li key={item.id}>{item.name} ({item.id})</li>)}
-                </ul>
+                <ToggleButtonGroup name='answers'>
+                    <ToggleButton value={items[0].A}> {items[0].A} </ToggleButton>
+                    <ToggleButton value={items[0].B}> {items[0].B} </ToggleButton>
+                    <ToggleButton value={items[0].C}> {items[0].C} </ToggleButton>
+                    <ToggleButton value={items[0].D}> {items[0].D} </ToggleButton>
+                    <ToggleButton value={items[0].E}> {items[0].E} </ToggleButton>
+                </ToggleButtonGroup>
             </div>
         );
 
