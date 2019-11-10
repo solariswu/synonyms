@@ -7,67 +7,128 @@ import awsconfig from './appconfig'
 // import * as subscriptions from './graphql/subscriptions';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { ToggleButtonGroup, ToggleButton, Button } from 'react-bootstrap';
+import { Button, Jumbotron, Form, Col, Row, Container } from 'react-bootstrap';
 
 Amplify.configure(awsconfig);
 
 class App extends Component {
     constructor(props) {
         super(props);
-        this.state = {answer: ''};
+        this.state = {
+            listItems: [],
+            results: [],
+            currentIndex: 0,
+            selectedOption: '',
+            answered: '',
+            buttonText: 'Submit'
+        };
       }
 
-    handleAnswer = (answer) => {
+    handleOptionChange = changeEvent => {
         this.setState({
-            answer: answer
-          });
-    }
+            selectedOption: changeEvent.target.value
+        });
+    };
+
+    handleSubmit = () => {
+        let currentItem = this.state.listItems[this.state.currentIndex];
+        // the user made choise / selected one of the radio input
+        if (this.state.selectedOption.length > 0 &&
+            this.state.answered !== this.state.selectedOption) {
+            this.setState({
+                answered: this.state.selectedOption
+            });
+        }
+        // second choose
+        if ('Next' === this.state.buttonText) {
+            this.state.results[this.state.currentIndex] = (this.state.answered === currentItem.Answer);
+            // clear state
+            this.setState({
+                answered: '',
+                selectedOption: '',
+                buttonText: 'Submit'
+            });
+            // move to next item
+            this.state.currentIndex ++;
+        }
+        //console.log("You have submitted:", this.state.selectedOption);
+    };
 
     render() {
         Amplify.Logger.LOG_LEVEL = 'VERBOSE';
 
-        const Submit = ({ correctAnswer }) => {
-            if (this.state.answer === correctAnswer) 
-                return ( <Button variant="success" size="sm"> Next </Button>)
-            return (<div />)
-        }
+        const Hint = () => {
+            if (this.state.listItems.length > 0) {
+                let currentItem = this.state.listItems[this.state.currentIndex];
 
-        const Hint = ({ content, correctAnswer }) => {
-            if (this.state.answer.length > 0)  
-                if (this.state.answer !== correctAnswer)  
-                    return ( <div> Nope! <br/> {content} </div> )
-                else 
-                    return (<div> Correct ! </div>)
-            
-            return (<div/>)
+                if (this.state.answered.length > 0) {
+                    this.state.buttonText = 'Next';
+                    if (this.state.answered !== currentItem.Answer) 
+                        return (<div> Not correct! Please try again. <br/> {currentItem.Hint} <br /></div>)
+                    else 
+                        return (<div> Correct ! <br/> </div>)
+                }
+            }
+            return (<div> <br /> <br /> </div>)
         } 
 
-        const ListView = ({ items }) => (
-            <div>
-                <h3>Please select the most <strong>similar</strong> word to the following word </h3>
-                <h3> ({items[0].base}) </h3>
-                <ToggleButtonGroup name='answers'>
-                    <ToggleButton value={items[0].A} onChange={() => this.handleAnswer(items[0].A)}> {items[0].A} </ToggleButton>
-                    <ToggleButton value={items[0].B} onChange={() => this.handleAnswer(items[0].B)}> {items[0].B} </ToggleButton>
-                    <ToggleButton value={items[0].C} onChange={() => this.handleAnswer(items[0].C)}> {items[0].C} </ToggleButton>
-                    <ToggleButton value={items[0].D} onChange={() => this.handleAnswer(items[0].D)}> {items[0].D} </ToggleButton>
-                    <ToggleButton value={items[0].E} onChange={() => this.handleAnswer(items[0].E)}> {items[0].E} </ToggleButton>
-                </ToggleButtonGroup>
-            </div>
-        );
+        const ListView = () => {
+            if (this.state.listItems.length > 0) {
+                let currentItem = this.state.listItems[this.state.currentIndex];
+                let choises = [currentItem.A, currentItem.B, currentItem.C, currentItem.D, currentItem.E];
+
+                return (
+                    <Jumbotron>
+                        <h4>Please select the most <strong>similar</strong> word to the following word </h4>
+                        <br />
+                        <h3> {currentItem.base} </h3>
+                        <br />
+                        <fieldset>
+                            <Form.Group as={Row}>
+                            <Col sm={10}>
+                            { choises.map (choise => <Form.Check 
+                                                    type="radio"
+                                                    label={choise}
+                                                    name="answer"
+                                                    id={choise} 
+                                                    value={choise}
+                                                    onChange={this.handleOptionChange}
+                                                    checked={this.state.selectedOption === choise}
+                                                    key={choise} />)}
+                            </Col>
+                            </Form.Group>
+                        </fieldset>
+                    </Jumbotron>
+                );
+            }
+            return (<div/>);
+        }
 
         return (
             <Connect query={graphqlOperation(queries.listSynonyms)}>
                 {({ data: { listSynonyms }, loading, errors }) => {
                     if (loading || !listSynonyms) return (<h3>Loading...</h3>);
                     if (errors.lenth > 0 ) return (<h3>Error</h3>);
+
+                    this.state.listItems = listSynonyms.items;
                     return (
-                        <div>
-                            <ListView items={listSynonyms.items} /> 
-                            <Hint content={listSynonyms.items[0].Hint}
-                                  correctAnswer={listSynonyms.items[0].Answer} />
-                            <Submit correctAnswer={listSynonyms.items[0].Answer} />
-                        </div>
+                        <Container>
+                            {/* Brand Title */}
+                            <div style={{backgroundColor: "black"}}>Synonyms</div>
+
+                            <ListView />
+                            <Hint  />
+
+                            {/* float button to right */}
+                            <div style={{display: "flex"}}>
+                            <Button 
+                                style={{ marginLeft: "auto" }} 
+                                id="submit" 
+                                onClick={this.handleSubmit}> 
+                                { this.state.buttonText } 
+                            </Button>
+                            </div>
+                        </Container>
                     );
                 }}
             </Connect>
