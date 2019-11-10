@@ -7,7 +7,7 @@ import awsconfig from './appconfig'
 // import * as subscriptions from './graphql/subscriptions';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Button, Jumbotron, Form, Col, Row, Container } from 'react-bootstrap';
+import { Button, Jumbotron, Form, Col, Row, Container, ButtonGroup } from 'react-bootstrap';
 
 Amplify.configure(awsconfig);
 
@@ -55,7 +55,7 @@ class App extends Component {
     };
 
     render() {
-        Amplify.Logger.LOG_LEVEL = 'VERBOSE';
+//        Amplify.Logger.LOG_LEVEL = 'VERBOSE';
 
         const Hint = () => {
             if (this.state.listItems.length > 0) {
@@ -104,6 +104,19 @@ class App extends Component {
             return (<div/>);
         }
 
+        const ResultList = () => {
+            return (
+                <ButtonGroup>
+                    { this.state.results.map ((result, index) => <Button
+                                                                  variant={result === true ?
+                                                                           'success' : 'danger'}
+                                                                  size="sm">
+                                                                    {index}
+                                                                  </Button>) }
+                </ButtonGroup>
+            )
+        }
+
         return (
             <Connect query={graphqlOperation(queries.listSynonyms)}>
                 {({ data: { listSynonyms }, loading, errors }) => {
@@ -113,6 +126,7 @@ class App extends Component {
                     this.state.listItems = listSynonyms.items;
                     return (
                         <Container>
+                            <ResultList />
                             {/* Brand Title */}
                             <div style={{backgroundColor: "black"}}>Synonyms</div>
 
