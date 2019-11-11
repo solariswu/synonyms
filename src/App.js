@@ -108,22 +108,33 @@ class App extends Component {
             return (
                 <ButtonGroup>
                     { this.state.results.map ((result, index) => <Button
-                                                                  variant={result === true ?
+                                                                  variant={result === '-' ?
+                                                                           'secondary' :
+                                                                           result === true ?
                                                                            'success' : 'danger'}
                                                                   size="sm">
-                                                                    {index}
+                                                                    {index+1}
                                                                   </Button>) }
                 </ButtonGroup>
             )
         }
 
         return (
+            // Todo: need to remove from render
             <Connect query={graphqlOperation(queries.listSynonyms)}>
                 {({ data: { listSynonyms }, loading, errors }) => {
                     if (loading || !listSynonyms) return (<h3>Loading...</h3>);
                     if (errors.lenth > 0 ) return (<h3>Error</h3>);
 
                     this.state.listItems = listSynonyms.items;
+                    const itemsLen = listSynonyms.items.length;
+                    for (let index = 0; index < itemsLen; index ++) {
+                        if (this.state.results[index] !== true && 
+                            this.state.results[index] !== false)
+                            this.state.results[index] = ('-');
+                    }
+                    console.log ('result array: ', this.state.results);
+
                     return (
                         <Container>
                             <ResultList />
