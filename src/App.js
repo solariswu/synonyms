@@ -32,16 +32,8 @@ class App extends Component {
 
     handleSubmit = () => {
         let currentItem = this.state.listItems[this.state.currentIndex];
-        // the user made choise / selected one of the radio input
-        if (this.state.selectedOption.length > 0 &&
-            this.state.answered !== this.state.selectedOption) {
-            this.setState({
-                answered: this.state.selectedOption
-            });
-        }
-        // second choose
-        if ('Next' === this.state.buttonText) {
-            this.state.results[this.state.currentIndex] = (this.state.answered === currentItem.Answer);
+
+        if (this.state.buttonText === 'Next') {
             // clear state
             this.setState({
                 answered: '',
@@ -51,20 +43,40 @@ class App extends Component {
             // move to next item
             this.state.currentIndex ++;
         }
+        // the user made choise / selected one of the radio input
+        else if (this.state.selectedOption.length > 0 &&
+            this.state.answered !== this.state.selectedOption) {
+            // second try, change button text
+            if (this.state.answered !== '') {
+                this.setState({ buttonText: 'Next' })
+            }
+            // first try, update the resultBreadcum accordingly
+            else {
+                this.setState({ buttonText: 'Try Again' })
+                this.state.results[this.state.currentIndex] =
+                    (this.state.selectedOption === currentItem.Answer);
+            }
+            // update answered reccord
+            this.setState({
+                answered: this.state.selectedOption
+            });
+            // correct answer, change the button to 'Next'
+            if (this.state.selectedOption === currentItem.Answer) {
+                this.setState({ buttonText: 'Next' })
+            }
+        }
         //console.log("You have submitted:", this.state.selectedOption);
     };
 
     render() {
-//        Amplify.Logger.LOG_LEVEL = 'VERBOSE';
-
+       Amplify.Logger.LOG_LEVEL = 'VERBOSE';
         const Hint = () => {
             if (this.state.listItems.length > 0) {
                 let currentItem = this.state.listItems[this.state.currentIndex];
 
                 if (this.state.answered.length > 0) {
-                    this.state.buttonText = 'Next';
                     if (this.state.answered !== currentItem.Answer) 
-                        return (<div> Not correct! Please try again. <br/> {currentItem.Hint} <br /></div>)
+                        return (<div> Not correct! <br/> {currentItem.Hint} <br /></div>)
                     else 
                         return (<div> Correct ! <br/> </div>)
                 }
@@ -112,7 +124,9 @@ class App extends Component {
                                                                            'secondary' :
                                                                            result === true ?
                                                                            'success' : 'danger'}
-                                                                  size="sm">
+                                                                  size="sm"
+                                                                  key={index}
+                                                                  >
                                                                     {index+1}
                                                                   </Button>) }
                 </ButtonGroup>
@@ -120,42 +134,41 @@ class App extends Component {
         }
 
         return (
-            // Todo: need to remove from render
-            <Connect query={graphqlOperation(queries.listSynonyms)}>
-                {({ data: { listSynonyms }, loading, errors }) => {
+                <Connect query={graphqlOperation(queries.listSynonyms)}>
+                    {({ data: { listSynonyms }, loading, errors }) => {
                     if (loading || !listSynonyms) return (<h3>Loading...</h3>);
-                    if (errors.lenth > 0 ) return (<h3>Error</h3>);
+                        if (errors.lenth > 0 ) return (<h3>Error</h3>);
 
-                    this.state.listItems = listSynonyms.items;
-                    const itemsLen = listSynonyms.items.length;
-                    for (let index = 0; index < itemsLen; index ++) {
-                        if (this.state.results[index] !== true && 
-                            this.state.results[index] !== false)
-                            this.state.results[index] = ('-');
-                    }
-                    console.log ('result array: ', this.state.results);
+                        this.state.listItems = listSynonyms.items;
+                        const itemsLen = listSynonyms.items.length;
+                        for (let index = 0; index < itemsLen; index ++) {
+                            if (this.state.results[index] !== true && 
+                                this.state.results[index] !== false)
+                                this.state.results[index] = ('-');
+                        }
+                        console.log ('result array: ', this.state.results);                   
+        
+                return (
+                    <Container>
+                        <ResultList />
+                        {/* Brand Title */}
+                        <div style={{backgroundColor: "black"}}>Synonyms</div>
 
-                    return (
-                        <Container>
-                            <ResultList />
-                            {/* Brand Title */}
-                            <div style={{backgroundColor: "black"}}>Synonyms</div>
+                        <ListView />
+                        <Hint  />
 
-                            <ListView />
-                            <Hint  />
-
-                            {/* float button to right */}
-                            <div style={{display: "flex"}}>
-                            <Button 
-                                style={{ marginLeft: "auto" }} 
-                                id="submit" 
-                                onClick={this.handleSubmit}> 
-                                { this.state.buttonText } 
-                            </Button>
-                            </div>
-                        </Container>
-                    );
-                }}
+                        {/* float button to right */}
+                        <div style={{display: "flex"}}>
+                        <Button 
+                            style={{ marginLeft: "auto" }} 
+                            id="submit" 
+                            onClick={this.handleSubmit}> 
+                            { this.state.buttonText } 
+                        </Button>
+                        </div>
+                    </Container>
+                );
+            }}
             </Connect>
         )
     }
