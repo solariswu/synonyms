@@ -11,6 +11,10 @@ import { Button, Jumbotron, Form, Col, Row, Container, ButtonGroup } from 'react
 
 Amplify.configure(awsconfig);
 
+function randomsort(a, b) {
+    return Math.random()>.5 ? -1 : 1;
+}
+
 class App extends Component {
     constructor(props) {
         super(props);
@@ -88,6 +92,8 @@ class App extends Component {
             if (this.state.listItems.length > 0) {
                 let currentItem = this.state.listItems[this.state.currentIndex];
                 let choises = [currentItem.A, currentItem.B, currentItem.C, currentItem.D, currentItem.E];
+                // random the choises list sequence
+                // choises.sort(randomsort);
 
                 return (
                     <Jumbotron>
@@ -106,7 +112,8 @@ class App extends Component {
                                                     value={choise}
                                                     onChange={this.handleOptionChange}
                                                     checked={this.state.selectedOption === choise}
-                                                    key={choise} />)}
+                                                    key={choise}
+                                                    disabled={this.state.buttonText === 'Next'} />)}
                             </Col>
                             </Form.Group>
                         </fieldset>
@@ -134,7 +141,7 @@ class App extends Component {
         }
 
         return (
-                <Connect query={graphqlOperation(queries.listSynonyms)}>
+                <Connect query={graphqlOperation(queries.listSynonyms, {"filter": { session: { eq: 1}, type: { eq: '1'}}, limit: 5000})}>
                     {({ data: { listSynonyms }, loading, errors }) => {
                     if (loading || !listSynonyms) return (<h3>Loading...</h3>);
                         if (errors.lenth > 0 ) return (<h3>Error</h3>);
