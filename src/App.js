@@ -19,7 +19,7 @@ class App extends Component {
                 <Switch>
                     {/* If the current URL is /about, this route is rendered
                         while the rest are ignored */}
-                    <Route path="/synonymschoises/:sessionid">
+                    <Route path="/synonymschoises/:session/:part">
                         <SynonymsChoises />
                     </Route>
 

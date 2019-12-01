@@ -7,7 +7,7 @@ import * as queries from '../graphql/queries';
 
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import { Button, Jumbotron, Form, Col, Row, Container, ButtonGroup } from '../../node_modules/react-bootstrap';
-
+import { withRouter } from "react-router";
 
 function randomsort(a, b) {
     return Math.random()>.5 ? -1 : 1;
@@ -17,6 +17,8 @@ class SynonymsChoises extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            session: 0,
+            part: 0,
             listItems: [],
             results: [],
             currentIndex: 0,
@@ -69,8 +71,18 @@ class SynonymsChoises extends Component {
         }
         //console.log("You have submitted:", this.state.selectedOption);
     };
+    
+    componentDidMount() {
+            const {session, part} = this.props.match.params;
+            this.setState({session: session, part: part});
+    }
 
     render() {
+        console.log ('session:', this.state.session, ' part:', this.state.part);
+
+        if (this.state.session === 0)
+            return(<Container> Loading </Container>);
+
         const Hint = () => {
             if (this.state.listItems.length > 0) {
                 let currentItem = this.state.listItems[this.state.currentIndex];
@@ -85,35 +97,51 @@ class SynonymsChoises extends Component {
             return (<div> <br /> <br /> </div>)
         } 
 
-        const ListView = () => {
-            if (this.state.listItems.length > 0) {
-                let currentItem = this.state.listItems[this.state.currentIndex];
-                let choises = [currentItem.A, currentItem.B, currentItem.C, currentItem.D, currentItem.E];
-                // random the choises list sequence
-                // choises.sort(randomsort);
+        const FinalResult = () => {
+            return(<Container>
+                You've finished this part.
+                <Button>
+                    Back
+                </Button>
+            </Container>)
+        }
 
+        const ChoisesDisplay = () => {
+            let currentItem = this.state.listItems[this.state.currentIndex];
+            let choises = [currentItem.A, currentItem.B, currentItem.C, currentItem.D, currentItem.E];
+            // random the choises list sequence
+            // choises.sort(randomsort);
+
+            return (
+                <fieldset>
+                    <Form.Group as={Row}>
+                    <Col sm={10}>
+                    { choises.map (choise => <Form.Check 
+                                            type="radio"
+                                            label={choise}
+                                            name="answer"
+                                            id={choise} 
+                                            value={choise}
+                                            onChange={this.handleOptionChange}
+                                            checked={this.state.selectedOption === choise}
+                                            key={choise}
+                                            disabled={this.state.buttonText === 'Next'} />)}
+                    </Col>
+                    </Form.Group>
+                </fieldset>
+            );
+        }
+
+        const ListView = () => {
+            let currentItem = this.state.listItems[this.state.currentIndex];
+            if (this.state.listItems.length > 0) {
                 return (
                     <Jumbotron>
                         <h4>Please select the most <strong>similar</strong> word to the following word </h4>
                         <br />
                         <h3> {currentItem.base} </h3>
                         <br />
-                        <fieldset>
-                            <Form.Group as={Row}>
-                            <Col sm={10}>
-                            { choises.map (choise => <Form.Check 
-                                                    type="radio"
-                                                    label={choise}
-                                                    name="answer"
-                                                    id={choise} 
-                                                    value={choise}
-                                                    onChange={this.handleOptionChange}
-                                                    checked={this.state.selectedOption === choise}
-                                                    key={choise}
-                                                    disabled={this.state.buttonText === 'Next'} />)}
-                            </Col>
-                            </Form.Group>
-                        </fieldset>
+                        <ChoisesDisplay />
                     </Jumbotron>
                 );
             }
@@ -138,7 +166,10 @@ class SynonymsChoises extends Component {
         }
 
         return (
-                <Connect query={graphqlOperation(queries.listSynonyms, {"filter": { session: { eq: 1}, type: { eq: '1'}}, limit: 5000})}>
+                <Connect query={graphqlOperation(queries.listSynonyms, 
+                                    {"filter": { session: { eq: this.state.session},
+                                                type: { eq: this.state.part.toString()}},
+                                                limit: 5000})}>
                     {({ data: { listSynonyms }, loading, errors }) => {
                     if (loading || !listSynonyms) return (<h3>Loading...</h3>);
                         if (errors.lenth > 0 ) return (<h3>Error</h3>);
@@ -178,4 +209,4 @@ class SynonymsChoises extends Component {
     }
 };
 
-export default SynonymsChoises;
+export default withRouter(SynonymsChoises);
