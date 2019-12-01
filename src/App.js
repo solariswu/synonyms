@@ -1,17 +1,11 @@
 import React, { Component } from "react";
 import Amplify from "aws-amplify";
 import awsconfig from './appconfig';
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  useRouteMatch,
-  useParams
-} from "react-router-dom";
 import SynonymsChoises from "./Components/SynonymsChoises";
 import Home from "./Components/Home";
+
 import { withAuthenticator } from "aws-amplify-react";
 
 Amplify.configure(awsconfig);
