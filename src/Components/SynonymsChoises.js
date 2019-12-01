@@ -8,6 +8,8 @@ import * as queries from '../graphql/queries';
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import { Button, Jumbotron, Form, Col, Row, Container, ButtonGroup } from '../../node_modules/react-bootstrap';
 import { withRouter } from "react-router";
+import { QUESTION_CONTENTS, QUESTION_TITLES } from '../consts/Const';
+import { isBlock } from '@babel/types';
 
 function randomsort(a, b) {
     return Math.random()>.5 ? -1 : 1;
@@ -78,7 +80,7 @@ class SynonymsChoises extends Component {
     }
 
     render() {
-        console.log ('session:', this.state.session, ' part:', this.state.part);
+        //console.log ('session:', this.state.session, ' part:', this.state.part);
 
         if (this.state.session === 0)
             return(<Container> Loading </Container>);
@@ -137,7 +139,7 @@ class SynonymsChoises extends Component {
             if (this.state.listItems.length > 0) {
                 return (
                     <Jumbotron>
-                        <h4>Please select the most <strong>similar</strong> word to the following word </h4>
+                        <h5> {QUESTION_CONTENTS[this.state.part-1]} </h5>
                         <br />
                         <h3> {currentItem.base} </h3>
                         <br />
@@ -150,6 +152,7 @@ class SynonymsChoises extends Component {
 
         const ResultList = () => {
             return (
+                <div className="bg-light" style={{display: "block"}}>
                 <ButtonGroup>
                     { this.state.results.map ((result, index) => <Button
                                                                   variant={result === '-' ?
@@ -158,10 +161,12 @@ class SynonymsChoises extends Component {
                                                                            'success' : 'danger'}
                                                                   size="sm"
                                                                   key={index}
+                                                                  className="mr-1"
                                                                   >
                                                                     {index+1}
                                                                   </Button>) }
                 </ButtonGroup>
+                </div>
             )
         }
 
@@ -187,7 +192,9 @@ class SynonymsChoises extends Component {
                     <Container>
                         <ResultList />
                         {/* Brand Title */}
-                        <div style={{backgroundColor: "black"}}>Synonyms</div>
+                        <div className="text-white bg-dark px-2">
+                            Lession {this.state.session} - {QUESTION_TITLES[this.state.part-1]}
+                        </div>
 
                         <ListView />
                         <Hint  />

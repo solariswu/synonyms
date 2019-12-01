@@ -25,7 +25,9 @@ class Home extends Component {
                                 <Card.Link href={`/synonymschoises/${itemIdx}/1`}>Part 1</Card.Link>
                                 <Card.Link href={`/synonymschoises/${itemIdx}/2`}>Part 2</Card.Link>
                                 <Card.Link href={`/synonymschoises/${itemIdx}/3`}>Part 3</Card.Link>
+                                <br />
                                 <Card.Link href={`/synonymschoises/${itemIdx}/4`}>Part 4</Card.Link>
+                                <Card.Link href={`/synonymschoises/${itemIdx}/5`}>Part 5</Card.Link>
                             </Card.Body>
                         </Card>);
             }
