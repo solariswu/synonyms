@@ -19,11 +19,11 @@ class App extends Component {
                 <Switch>
                     {/* If the current URL is /about, this route is rendered
                         while the rest are ignored */}
-                    <Route path="/synonymschoises/:session/:part">
+                    <Route path={process.env.PUBLIC_URL + '/synonymschoises/:session/:part'}>
                         <SynonymsChoises />
                     </Route>
 
-                    <Route path="/">
+                    <Route path={process.env.PUBLIC_URL + '/'}>
                         <Home />
                     </Route>
                 </Switch>
