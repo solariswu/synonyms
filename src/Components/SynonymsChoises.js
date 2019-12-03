@@ -1,15 +1,14 @@
-import React, { Component } from '../../node_modules/react';
-import { graphqlOperation } from "../../node_modules/aws-amplify";
-import { Connect } from "../../node_modules/aws-amplify-react";
+import React, { Component } from 'react';
+import { graphqlOperation } from "aws-amplify";
+import { Connect } from "aws-amplify-react";
 
 import * as queries from '../graphql/queries';
 // import * as subscriptions from './graphql/subscriptions';
 
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import { Button, Jumbotron, Form, Col, Row, Container, ButtonGroup } from '../../node_modules/react-bootstrap';
-import { withRouter } from "react-router";
+import { Button, Jumbotron, Form, Col, Row, Container, ButtonGroup } from 'react-bootstrap';
+import { withRouter } from 'react-router';
 import { QUESTION_CONTENTS, QUESTION_TITLES } from '../consts/Const';
-import { isBlock } from '@babel/types';
 
 function randomsort(a, b) {
     return Math.random()>.5 ? -1 : 1;
@@ -47,7 +46,7 @@ class SynonymsChoises extends Component {
                 buttonText: 'Submit'
             });
             // move to next item
-            this.state.currentIndex ++;
+            this.setState({ currentIndex: this.state.currentIndex + 1 });
         }
         // the user made choise / selected one of the radio input
         else if (this.state.selectedOption.length > 0 &&
@@ -98,15 +97,6 @@ class SynonymsChoises extends Component {
             }
             return (<div> <br /> <br /> </div>)
         } 
-
-        const FinalResult = () => {
-            return(<Container>
-                You've finished this part.
-                <Button>
-                    Back
-                </Button>
-            </Container>)
-        }
 
         const ChoisesDisplay = () => {
             let currentItem = this.state.listItems[this.state.currentIndex];
@@ -170,6 +160,53 @@ class SynonymsChoises extends Component {
             )
         }
 
+        const PartResult = () => {
+
+            return (
+                <Container>
+                    You've finished part {this.state.part} of session {this.state.session}.
+                    Result is {this.state.results}.
+                    <Button href="/">
+                        Back
+                    </Button>
+                </Container>
+            );
+        }
+
+        const Question = () => {
+            return (
+                <Container>
+                    <ResultList />
+                    {/* Brand Title */}
+                    <div className="text-white bg-dark px-2">
+                        Lession {this.state.session} - {QUESTION_TITLES[this.state.part-1]}
+                    </div>
+
+                    <ListView />
+
+                    {/* float button to right */}
+                    <div style={{display: "flex"}}>
+                    <Button 
+                        style={{ marginLeft: "auto" }} 
+                        id="submit" 
+                        onClick={this.handleSubmit}> 
+                        { this.state.buttonText } 
+                    </Button>
+                    </div>
+                    <Hint  />
+                </Container>
+            );
+        }
+
+        if (this.state.listItems.length > 0) {
+            if (this.state.currentIndex >= this.state.listItems.length) {
+                return (<PartResult />);
+            }
+            return (
+                <Question /> 
+            );
+        }
+
         return (
                 <Connect query={graphqlOperation(queries.listSynonyms, 
                                     {"filter": { session: { eq: this.state.session},
@@ -189,26 +226,7 @@ class SynonymsChoises extends Component {
                         console.log ('result array: ', this.state.results);                   
         
                 return (
-                    <Container>
-                        <ResultList />
-                        {/* Brand Title */}
-                        <div className="text-white bg-dark px-2">
-                            Lession {this.state.session} - {QUESTION_TITLES[this.state.part-1]}
-                        </div>
-
-                        <ListView />
-                        <Hint  />
-
-                        {/* float button to right */}
-                        <div style={{display: "flex"}}>
-                        <Button 
-                            style={{ marginLeft: "auto" }} 
-                            id="submit" 
-                            onClick={this.handleSubmit}> 
-                            { this.state.buttonText } 
-                        </Button>
-                        </div>
-                    </Container>
+                    <Question />
                 );
             }}
             </Connect>

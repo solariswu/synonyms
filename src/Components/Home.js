@@ -16,7 +16,7 @@ class Home extends Component {
             let items = [];
             for (let j = 1; j < 5; j++) {
                 let itemIdx = rowId.rowId * 4 + j;
-                items.push(<Card style={{ width: '18rem' }} key={itemIdx}>
+                items.push(<Card className="mt-1" style={{ width: '18rem' }} key={itemIdx}>
                             <Card.Body>
                                 <Card.Title>Lesson {itemIdx}</Card.Title>
                                 <Card.Text>
@@ -31,10 +31,8 @@ class Home extends Component {
                             </Card.Body>
                         </Card>);
             }
-
             return (<CardDeck >{items}</CardDeck>);
         }
-        
         return (
             <CardWall rows={7} />
         );
