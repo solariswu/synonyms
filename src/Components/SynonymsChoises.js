@@ -9,6 +9,8 @@ import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import { Button, Jumbotron, Form, Col, Row, Container, ButtonGroup } from 'react-bootstrap';
 import { withRouter } from 'react-router';
 import { QUESTION_CONTENTS, QUESTION_TITLES } from '../consts/Const';
+import { Pie } from 'react-chartjs-2';
+
 
 function randomsort(a, b) {
     return Math.random()>.5 ? -1 : 1;
@@ -53,13 +55,15 @@ class SynonymsChoises extends Component {
             this.state.answered !== this.state.selectedOption) {
             // second try, change button text
             if (this.state.answered !== '') {
-                this.setState({ buttonText: 'Next' })
+                this.setState({ buttonText: 'Next' });
+                this.state.results[this.state.currentIndex][1] =
+                    (this.state.selectedOption === currentItem.Answer);
             }
             // first try, update the resultBreadcum accordingly
             else {
                 this.setState({ buttonText: 'Try Again' })
                 this.state.results[this.state.currentIndex] =
-                    (this.state.selectedOption === currentItem.Answer);
+                    [(this.state.selectedOption === currentItem.Answer), false];
             }
             // update answered reccord
             this.setState({
@@ -145,9 +149,9 @@ class SynonymsChoises extends Component {
                 <div className="bg-light" style={{display: "block"}}>
                 <ButtonGroup>
                     { this.state.results.map ((result, index) => <Button
-                                                                  variant={result === '-' ?
+                                                                  variant={result[0] === '-' ?
                                                                            'secondary' :
-                                                                           result === true ?
+                                                                           result[0] === true ?
                                                                            'success' : 'danger'}
                                                                   size="sm"
                                                                   key={index}
@@ -160,15 +164,63 @@ class SynonymsChoises extends Component {
             )
         }
 
-        const PartResult = () => {
+        const ResultPercent = () => {
+
+            let data = {
+                labels: [
+                    'Correct',
+                    '2ndTry',
+                    'Wrong'
+                ],
+                datasets: [{
+                    data: [0,0,0],
+                    backgroundColor: [
+                    '#36A2EB',
+                    '#FFCE56',
+                    '#FF6384'
+                    ],
+                    hoverBackgroundColor: [
+                    '#36A2EB',
+                    '#FFCE56',
+                    '#FF6384'
+                    ]
+                }]
+            };
+
+            let firstTrue = 0;
+            let secondTrue = 0;
+            for (let i = 0; i < this.state.results.length; i++) {
+              if (this.state.results[i][0] === true) 
+                firstTrue ++;
+              if (this.state.results[i][1] === true)
+                secondTrue ++;
+            }
+
+            data.datasets[0].data[0] = firstTrue;
+            data.datasets[0].data[1] = secondTrue;
+            data.datasets[0].data[2] = this.state.results.length - firstTrue - secondTrue;
 
             return (
                 <Container>
-                    You've finished part {this.state.part} of session {this.state.session}.
-                    Result is {this.state.results}.
-                    <Button href="/">
-                        Back
-                    </Button>
+                    <h4>You've finished Session {this.state.session} Part {this.state.part}</h4>
+                    <Pie data={data} />
+                    <Row>
+                        <ul>
+                        <li>Correct 1st: {firstTrue}</li>
+                        <li>Correct 2nd: {secondTrue}</li>
+                        <li>Wrong: {this.state.results.length - firstTrue - secondTrue}</li>
+                        </ul>
+                    </Row>
+                    <Row>
+                        <Col>
+                        <Button href={`/synoymschoises/${this.state.session}/${this.state.part}`}>
+                            Again
+                        </Button>
+                        </Col>
+                        <Button href="/">
+                            Back
+                        </Button>
+                    </Row>
                 </Container>
             );
         }
@@ -200,7 +252,7 @@ class SynonymsChoises extends Component {
 
         if (this.state.listItems.length > 0) {
             if (this.state.currentIndex >= this.state.listItems.length) {
-                return (<PartResult />);
+                return (<ResultPercent />);
             }
             return (
                 <Question /> 
@@ -219,9 +271,7 @@ class SynonymsChoises extends Component {
                         this.state.listItems = listSynonyms.items;
                         const itemsLen = listSynonyms.items.length;
                         for (let index = 0; index < itemsLen; index ++) {
-                            if (this.state.results[index] !== true && 
-                                this.state.results[index] !== false)
-                                this.state.results[index] = ('-');
+                                this.state.results[index] = ['-', '-'];
                         }
                         console.log ('result array: ', this.state.results);                   
         
