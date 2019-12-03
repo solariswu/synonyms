@@ -213,8 +213,8 @@ class SynonymsChoises extends Component {
                     </Row>
                     <Row>
                         <Col>
-                        <Button href={`/synoymschoises/${this.state.session}/${this.state.part}`}>
-                            Again
+                        <Button href={`/synonymschoises/${this.state.session}/${this.state.part}`}>
+                            Retry
                         </Button>
                         </Col>
                         <Button href="/">
