@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Amplify from "aws-amplify";
 import awsconfig from './appconfig';
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as HashRouter, Router, Switch, Route } from "react-router-dom";
 
 import SynonymsChoises from "./Components/SynonymsChoises";
 import Home from "./Components/Home";
@@ -15,7 +15,7 @@ class App extends Component {
         Amplify.Logger.LOG_LEVEL = 'VERBOSE';
 
         return (
-            <Router>
+            <HashRouter>
                 <Switch>
                     {/* If the current URL is /about, this route is rendered
                         while the rest are ignored */}
@@ -27,7 +27,7 @@ class App extends Component {
                         <Home />
                     </Route>
                 </Switch>
-            </Router>
+            </HashRouter>
         );
     }
 }
