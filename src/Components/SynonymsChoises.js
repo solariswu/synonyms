@@ -8,6 +8,7 @@ import * as queries from '../graphql/queries';
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import { Button, Jumbotron, Form, Col, Row, Container, ButtonGroup } from 'react-bootstrap';
 import { withRouter } from 'react-router';
+import { Link } from 'react-router-dom';
 import { QUESTION_CONTENTS, QUESTION_TITLES } from '../consts/Const';
 import { Pie } from 'react-chartjs-2';
 
@@ -35,7 +36,17 @@ class SynonymsChoises extends Component {
         this.setState({
             selectedOption: changeEvent.target.value
         });
-    };
+    }
+
+    handleRetry = () => {
+        this.state.results.fill(['-','-']);
+        this.setState({
+            currentIndex: 0,
+            selectedOption: '',
+            answered: '',
+            buttonText: 'Submit'
+        });
+    }
 
     handleSubmit = () => {
         let currentItem = this.state.listItems[this.state.currentIndex];
@@ -75,7 +86,7 @@ class SynonymsChoises extends Component {
             }
         }
         //console.log("You have submitted:", this.state.selectedOption);
-    };
+    }
     
     componentDidMount() {
             const {session, part} = this.props.match.params;
@@ -202,24 +213,32 @@ class SynonymsChoises extends Component {
 
             return (
                 <Container>
-                    <h4>You've finished Session {this.state.session} Part {this.state.part}</h4>
+                    <h4 className="text-center">You've finished Session {this.state.session} Part {this.state.part}</h4>
                     <Pie data={data} />
                     <Row>
+                        <Col></Col>
+                        <Col>
                         <ul>
                         <li>Correct 1st: {firstTrue}</li>
                         <li>Correct 2nd: {secondTrue}</li>
                         <li>Wrong: {this.state.results.length - firstTrue - secondTrue}</li>
                         </ul>
+                        </Col>
+                        <Col></Col>
                     </Row>
                     <Row>
-                        <Col className="text-cente">
-                        <Button href={`/synonymschoises/${this.state.session}/${this.state.part}`}>
+                        <Col className="col"></Col>
+                        <Col className="col">
+                        <Button onClick={this.handleRetry}>
                             Retry
                         </Button>
                         </Col>
-                        <Button href="/">
+                        <Col className="col"></Col>
+                        <Col className="col">
+                        <Button as={Link} to="/">
                             Back
                         </Button>
+                        </Col>
                     </Row>
                 </Container>
             );
@@ -237,15 +256,21 @@ class SynonymsChoises extends Component {
                     <ListView />
 
                     {/* float button to right */}
-                    <div style={{display: "flex"}}>
-                    <Button 
-                        style={{ marginLeft: "auto" }} 
-                        id="submit" 
-                        onClick={this.handleSubmit}> 
-                        { this.state.buttonText } 
-                    </Button>
-                    </div>
-                    <Hint  />
+                    <Row>
+                        <Col>
+                        <Hint />
+                        </Col>
+                        <Col>
+                        <div style={{display: "flex"}}>
+                        <Button 
+                            style={{ marginLeft: "auto" }} 
+                            id="submit" 
+                            onClick={this.handleSubmit}> 
+                            { this.state.buttonText } 
+                        </Button>
+                        </div>
+                    </Col>
+                    </Row>
                 </Container>
             );
         }
