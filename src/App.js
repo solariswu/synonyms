@@ -17,15 +17,10 @@ class App extends Component {
         console.log("Your process.env.PUBLIC_URL", process.env.PUBLIC_URL);
 
         return (
-            <BrowserRouter basename={process.env.PUBLIC_URL}>
+            <BrowserRouter basename='synonyms'>
                 <Switch>
-                    <Route exact path="/synonymschoises/:session/:part">
-                        <SynonymsChoises />
-                    </Route>
-
-                    <Route path="/">
-                        <Home />
-                    </Route>
+                    <Route exact path="/synonymschoises/:session/:part" component={SynonymsChoises} />
+                    <Route path="/" component={Home} />
                 </Switch>
             </BrowserRouter>
         );
