@@ -15,7 +15,7 @@ class App extends Component {
         Amplify.Logger.LOG_LEVEL = 'VERBOSE';
 
         return (
-            <BrowserRouter basename={process.env.PUBLIC_URL}>
+            <BrowserRouter>
                 <Switch>
                     <Route path="/synonymschoises/:session/:part">}>
                         <SynonymsChoises />
