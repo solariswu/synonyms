@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Amplify from "aws-amplify";
 import awsconfig from './appconfig';
-import { HashRouter, Router, Switch, Route } from "react-router-dom";
+import { HashRouter, Switch, Route } from "react-router-dom";
 
 import SynonymsChoises from "./Components/SynonymsChoises";
 import Home from "./Components/Home";
