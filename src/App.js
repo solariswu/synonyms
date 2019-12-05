@@ -14,10 +14,10 @@ class App extends Component {
     render () {
         Amplify.Logger.LOG_LEVEL = 'VERBOSE';
 
-        console.log("Your process.env.PUBLIC_URL", process.env.PUBLIC_URL);
+        // console.log("Your process.env.PUBLIC_URL", process.env.PUBLIC_URL);
 
         return (
-            <BrowserRouter basename='synonyms'>
+            <BrowserRouter basename={process.env.PUBLIC_URL}>
                 <Switch>
                     <Route exact path="/synonymschoises/:session/:part" component={SynonymsChoises} />
                     <Route path="/" component={Home} />
