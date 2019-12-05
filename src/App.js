@@ -17,7 +17,7 @@ class App extends Component {
         return (
             <BrowserRouter basename={process.env.PUBLIC_URL}>
                 <Switch>
-                    <Route path="/synonymschoises/:session/:part">}>
+                    <Route exact path="/synonymschoises/:session/:part">
                         <SynonymsChoises />
                     </Route>
 
