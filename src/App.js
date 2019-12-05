@@ -14,6 +14,8 @@ class App extends Component {
     render () {
         Amplify.Logger.LOG_LEVEL = 'VERBOSE';
 
+        console.log("Your process.env.PUBLIC_URL", process.env.PUBLIC_URL);
+
         return (
             <BrowserRouter basename={process.env.PUBLIC_URL}>
                 <Switch>
