@@ -212,7 +212,7 @@ class SynonymsChoises extends Component {
                         </ul>
                     </Row>
                     <Row>
-                        <Col>
+                        <Col className="text-cente">
                         <Button href={`/synonymschoises/${this.state.session}/${this.state.part}`}>
                             Retry
                         </Button>
