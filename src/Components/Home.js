@@ -1,6 +1,7 @@
 
 import React, { Component } from '../../node_modules/react';
 import { Card, CardDeck} from '../../node_modules/react-bootstrap';
+import { Link } from 'react-router-dom';
 
 class Home extends Component {
 
@@ -23,7 +24,7 @@ class Home extends Component {
                                     Select one of the following session to start
                                 </Card.Text>
                                 <Card.Link href={`${process.env.PUBLIC_URL}/synonymschoises/${itemIdx}/1`}>Part 1</Card.Link>
-                                <Card.Link href={`${process.env.PUBLIC_URL}/synonymschoises/${itemIdx}/2`}>Part 2</Card.Link>
+                                <Card.Link as={Link} to={`/synonymschoises/${itemIdx}/2`}>Part 2</Card.Link>
                                 <Card.Link href={`${process.env.PUBLIC_URL}/synonymschoises/${itemIdx}/3`}>Part 3</Card.Link>
                                 <br />
                                 <Card.Link href={`${process.env.PUBLIC_URL}/synonymschoises/${itemIdx}/4`}>Part 4</Card.Link>
