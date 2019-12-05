@@ -99,7 +99,7 @@ class SynonymsChoises extends Component {
                         return (<div> Correct ! <br/> </div>)
                 }
             }
-            return (<div> <br /> <br /> </div>)
+            return (<div></div>)
         } 
 
         const ChoisesDisplay = () => {
@@ -141,7 +141,7 @@ class SynonymsChoises extends Component {
                     </Jumbotron>
                 );
             }
-            return (<div/>);
+            return (<div></div>);
         }
 
         const ResultList = () => {
@@ -254,9 +254,7 @@ class SynonymsChoises extends Component {
             if (this.state.currentIndex >= this.state.listItems.length) {
                 return (<ResultPercent />);
             }
-            return (
-                <Question /> 
-            );
+            return (<Question />);
         }
 
         return (
@@ -275,13 +273,11 @@ class SynonymsChoises extends Component {
                         }
                         console.log ('result array: ', this.state.results);                   
         
-                return (
-                    <Question />
-                );
-            }}
-            </Connect>
-        )
+                        return (<Question />);
+                    }}
+                </Connect>
+        );
     }
-};
+}
 
 export default withRouter(SynonymsChoises);
