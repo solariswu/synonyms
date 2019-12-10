@@ -353,7 +353,10 @@ class SynonymsChoises extends Component {
                 </Connect>
 
                 <Connect mutation={graphqlOperation(mutations.createPracticeHistory)}>
-                  {({mutation}) => (this.state.sendHistory = mutation)}
+                  {({mutation}) => {
+                      this.state.sendHistory = mutation;
+                      return (<div></div>);
+                  }}
                 </Connect>
 
             </Container>
