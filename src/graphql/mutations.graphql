@@ -1,0 +1,94 @@
+# this is an auto generated file. This will be overwritten
+mutation CreateSynonyms($input: CreateSynonymsInput!) {
+  createSynonyms(input: $input) {
+    id
+    base
+    session
+    type
+    index
+    A
+    B
+    C
+    D
+    E
+    Answer
+    Hint
+  }
+}
+mutation UpdateSynonyms($input: UpdateSynonymsInput!) {
+  updateSynonyms(input: $input) {
+    id
+    base
+    session
+    type
+    index
+    A
+    B
+    C
+    D
+    E
+    Answer
+    Hint
+  }
+}
+mutation DeleteSynonyms($input: DeleteSynonymsInput!) {
+  deleteSynonyms(input: $input) {
+    id
+    base
+    session
+    type
+    index
+    A
+    B
+    C
+    D
+    E
+    Answer
+    Hint
+  }
+}
+mutation CreatePracticeHistory($input: CreatePracticeHistoryInput!) {
+  createPracticeHistory(input: $input) {
+    id
+    username
+    result
+    tryNum
+    answer
+    itemId
+    sessionId
+    partId
+    index
+    date
+    time
+  }
+}
+mutation UpdatePracticeHistory($input: UpdatePracticeHistoryInput!) {
+  updatePracticeHistory(input: $input) {
+    id
+    username
+    result
+    tryNum
+    answer
+    itemId
+    sessionId
+    partId
+    index
+    date
+    time
+  }
+}
+mutation DeletePracticeHistory($input: DeletePracticeHistoryInput!) {
+  deletePracticeHistory(input: $input) {
+    id
+    username
+    result
+    tryNum
+    answer
+    itemId
+    sessionId
+    partId
+    index
+    date
+    time
+  }
+}

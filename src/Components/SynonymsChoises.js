@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { graphqlOperation } from "aws-amplify";
 import { Connect } from "aws-amplify-react";
+import { Auth } from 'aws-amplify';
+
 
 import * as queries from '../graphql/queries';
+import * as mutations from '../graphql/mutations'
 // import * as subscriptions from './graphql/subscriptions';
 
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
@@ -28,7 +31,9 @@ class SynonymsChoises extends Component {
             currentIndex: 0,
             selectedOption: '',
             answered: '',
-            buttonText: 'Submit'
+            buttonText: 'Submit',
+            username: '',
+            sendHistory: null
         };
       }
 
@@ -38,7 +43,7 @@ class SynonymsChoises extends Component {
         });
     }
 
-    handleRetry = () => {
+    handleRedoSession = () => {
         this.state.results.fill(['-','-']);
         this.setState({
             currentIndex: 0,
@@ -46,6 +51,43 @@ class SynonymsChoises extends Component {
             answered: '',
             buttonText: 'Submit'
         });
+    }
+
+    // async 
+    async addHistory (sendHistory, tryNum) {
+        let currentItem = this.state.listItems[this.state.currentIndex];
+        let today = new Date();
+        let dd = String(today.getDate()).padStart(2, '0');
+        let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        let yyyy = today.getFullYear();
+        let hh = today.getHours();
+        let mi = today.getMinutes();
+        let ss = today.getSeconds();
+
+        today = yyyy + '-' + mm + '-' + dd;
+        let now = hh + ':' + mi + ':' + ss + 'Z';
+
+     
+            const input = {
+             //   id: this.state.username + yyyy + mm + dd + hh + mi + ss + this.state.session + this.state.part + tryNum,
+                username: this.state.username,
+                result: this.state.selectedOption === currentItem.Answer,
+                tryNum: tryNum,
+                answer: this.state.selectedOption,
+                itemId: currentItem.id,
+                sessionId: currentItem.session,
+                partId: currentItem.type,
+                index: currentItem.index,
+                date: today,
+                time: now
+            }
+    
+            try {
+                // console.log (input);
+                await sendHistory({input})
+            } catch (err) {
+                console.error(err);
+            }
     }
 
     handleSubmit = () => {
@@ -69,12 +111,14 @@ class SynonymsChoises extends Component {
                 this.setState({ buttonText: 'Next' });
                 this.state.results[this.state.currentIndex][1] =
                     (this.state.selectedOption === currentItem.Answer);
+                this.addHistory (this.state.sendHistory, 2);
             }
             // first try, update the resultBreadcum accordingly
             else {
                 this.setState({ buttonText: 'Try Again' })
                 this.state.results[this.state.currentIndex] =
                     [(this.state.selectedOption === currentItem.Answer), false];
+                this.addHistory (this.state.sendHistory, 1);
             }
             // update answered reccord
             this.setState({
@@ -91,6 +135,12 @@ class SynonymsChoises extends Component {
     componentDidMount() {
             const {session, part} = this.props.match.params;
             this.setState({session: session, part: part});
+
+            Auth.currentAuthenticatedUser({
+                bypassCache: false  
+            }).then(user => {
+                this.setState({username: user.username});
+            });
     }
 
     render() {
@@ -175,7 +225,7 @@ class SynonymsChoises extends Component {
             )
         }
 
-        const ResultPercent = () => {
+        const ResultPie = () => {
 
             let data = {
                 labels: [
@@ -229,7 +279,7 @@ class SynonymsChoises extends Component {
                     <Row>
                         <Col className="col"></Col>
                         <Col className="col">
-                        <Button onClick={this.handleRetry}>
+                        <Button onClick={this.handleRedoSession}>
                             Retry
                         </Button>
                         </Col>
@@ -254,35 +304,35 @@ class SynonymsChoises extends Component {
                     </div>
 
                     <ListView />
-
                     {/* float button to right */}
-                    <Row>
-                        <Col>
-                        <Hint />
-                        </Col>
-                        <Col>
-                        <div style={{display: "flex"}}>
-                        <Button 
-                            style={{ marginLeft: "auto" }} 
-                            id="submit" 
-                            onClick={this.handleSubmit}> 
-                            { this.state.buttonText } 
-                        </Button>
-                        </div>
-                    </Col>
-                    </Row>
+                            <Row>
+                             <Col>
+                             <Hint />
+                             </Col>
+                             <Col>
+                                <div style={{display: "flex"}}>
+                                <Button 
+                                    style={{ marginLeft: "auto" }} 
+                                    id="submit" 
+                                    onClick={this.handleSubmit()}> 
+                                    { this.state.buttonText } 
+                                </Button>
+                                </div>
+                            </Col>
+                            </Row>
                 </Container>
             );
         }
 
         if (this.state.listItems.length > 0) {
             if (this.state.currentIndex >= this.state.listItems.length) {
-                return (<ResultPercent />);
+                return (<ResultPie />);
             }
             return (<Question />);
         }
 
         return (
+            <Container>
                 <Connect query={graphqlOperation(queries.listSynonyms, 
                                     {"filter": { session: { eq: this.state.session},
                                                 type: { eq: this.state.part.toString()}},
@@ -301,6 +351,12 @@ class SynonymsChoises extends Component {
                         return (<Question />);
                     }}
                 </Connect>
+
+                <Connect mutation={graphqlOperation(mutations.createPracticeHistory)}>
+                  {({mutation}) => (this.state.sendHistory = mutation)}
+                </Connect>
+
+            </Container>
         );
     }
 }

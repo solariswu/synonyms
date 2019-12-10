@@ -1,0 +1,166 @@
+# this is an auto generated file. This will be overwritten
+subscription OnCreateSynonyms(
+  $id: ID
+  $base: String
+  $session: Int
+  $type: String
+  $index: Int
+) {
+  onCreateSynonyms(
+    id: $id
+    base: $base
+    session: $session
+    type: $type
+    index: $index
+  ) {
+    id
+    base
+    session
+    type
+    index
+    A
+    B
+    C
+    D
+    E
+    Answer
+    Hint
+  }
+}
+subscription OnUpdateSynonyms(
+  $id: ID
+  $base: String
+  $session: Int
+  $type: String
+  $index: Int
+) {
+  onUpdateSynonyms(
+    id: $id
+    base: $base
+    session: $session
+    type: $type
+    index: $index
+  ) {
+    id
+    base
+    session
+    type
+    index
+    A
+    B
+    C
+    D
+    E
+    Answer
+    Hint
+  }
+}
+subscription OnDeleteSynonyms(
+  $id: ID
+  $base: String
+  $session: Int
+  $type: String
+  $index: Int
+) {
+  onDeleteSynonyms(
+    id: $id
+    base: $base
+    session: $session
+    type: $type
+    index: $index
+  ) {
+    id
+    base
+    session
+    type
+    index
+    A
+    B
+    C
+    D
+    E
+    Answer
+    Hint
+  }
+}
+subscription OnCreatePracticeHistory(
+  $id: ID
+  $username: String
+  $result: Boolean
+  $tryNum: Int
+  $answer: String
+) {
+  onCreatePracticeHistory(
+    id: $id
+    username: $username
+    result: $result
+    tryNum: $tryNum
+    answer: $answer
+  ) {
+    id
+    username
+    result
+    tryNum
+    answer
+    itemId
+    sessionId
+    partId
+    index
+    date
+    time
+  }
+}
+subscription OnUpdatePracticeHistory(
+  $id: ID
+  $username: String
+  $result: Boolean
+  $tryNum: Int
+  $answer: String
+) {
+  onUpdatePracticeHistory(
+    id: $id
+    username: $username
+    result: $result
+    tryNum: $tryNum
+    answer: $answer
+  ) {
+    id
+    username
+    result
+    tryNum
+    answer
+    itemId
+    sessionId
+    partId
+    index
+    date
+    time
+  }
+}
+subscription OnDeletePracticeHistory(
+  $id: ID
+  $username: String
+  $result: Boolean
+  $tryNum: Int
+  $answer: String
+) {
+  onDeletePracticeHistory(
+    id: $id
+    username: $username
+    result: $result
+    tryNum: $tryNum
+    answer: $answer
+  ) {
+    id
+    username
+    result
+    tryNum
+    answer
+    itemId
+    sessionId
+    partId
+    index
+    date
+    time
+  }
+}

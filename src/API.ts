@@ -36,6 +36,19 @@ export type DeleteSynonymsInput = {
   session: number,
 };
 
+export type CreatePracticeHistoryInput = {
+  username: string,
+  result: boolean,
+  tryNum: number,
+  answer: string,
+  itemId: string,
+  sessionId?: number | null,
+  partId?: number | null,
+  index?: number | null,
+  date?: string | null,
+  time?: string | null,
+};
+
 export type TableSynonymsFilterInput = {
   id?: TableIDFilterInput | null,
   base?: TableStringFilterInput | null,
@@ -152,6 +165,27 @@ export type DeleteSynonymsMutation = {
     E: string | null,
     Answer: string | null,
     Hint: string | null,
+  } | null,
+};
+
+export type CreatePracticeHistoryMutationVariables = {
+  input: CreatePracticeHistoryInput,
+};
+
+export type CreatePracticeHistoryMutation = {
+  createPracticeHistory:  {
+    __typename: "practiceHistory",
+    id: string,
+    username: string,
+    result: boolean,
+    tryNum: number,
+    answer: string,
+    itemId: string,
+    sessionId: number | null,
+    partId: number | null,
+    index: number | null,
+    date: string | null,
+    time: string | null,
   } | null,
 };
 

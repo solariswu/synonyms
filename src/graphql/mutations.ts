@@ -52,3 +52,19 @@ export const deleteSynonyms = `mutation DeleteSynonyms($input: DeleteSynonymsInp
   }
 }
 `;
+export const createPracticeHistory = `mutation CreatePracticeHistory($input: CreatePracticeHistoryInput!) {
+  createPracticeHistory(input: $input) {
+    id
+    username
+    result
+    tryNum
+    answer
+    itemId
+    sessionId
+    partId
+    index
+    date
+    time
+  }
+}
+`;

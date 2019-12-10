@@ -1,0 +1,157 @@
+# this is an auto generated file. This will be overwritten
+query GetSynonyms($id: ID!, $session: Int!) {
+  getSynonyms(id: $id, session: $session) {
+    id
+    base
+    session
+    type
+    index
+    A
+    B
+    C
+    D
+    E
+    Answer
+    Hint
+  }
+}
+query ListSynonyms(
+  $filter: TableSynonymsFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listSynonyms(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      base
+      session
+      type
+      index
+      A
+      B
+      C
+      D
+      E
+      Answer
+      Hint
+    }
+    nextToken
+  }
+}
+query QuerySynonymsBySessionBaseType(
+  $session: Int!
+  $first: Int
+  $after: String
+) {
+  querySynonymsBySessionBaseType(
+    session: $session
+    first: $first
+    after: $after
+  ) {
+    items {
+      id
+      base
+      session
+      type
+      index
+      A
+      B
+      C
+      D
+      E
+      Answer
+      Hint
+    }
+    nextToken
+  }
+}
+query QuerySynonymsBySessionBaseIndex(
+  $session: Int!
+  $first: Int
+  $after: String
+) {
+  querySynonymsBySessionBaseIndex(
+    session: $session
+    first: $first
+    after: $after
+  ) {
+    items {
+      id
+      base
+      session
+      type
+      index
+      A
+      B
+      C
+      D
+      E
+      Answer
+      Hint
+    }
+    nextToken
+  }
+}
+query GetPracticeHistory($id: ID!) {
+  getPracticeHistory(id: $id) {
+    id
+    username
+    result
+    tryNum
+    answer
+    itemId
+    sessionId
+    partId
+    index
+    date
+    time
+  }
+}
+query ListPracticeHistories(
+  $filter: TablePracticeHistoryFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listPracticeHistories(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      username
+      result
+      tryNum
+      answer
+      itemId
+      sessionId
+      partId
+      index
+      date
+      time
+    }
+    nextToken
+  }
+}
+query QueryPracticeHistoriesByUsernameDate(
+  $username: String!
+  $first: Int
+  $after: String
+) {
+  queryPracticeHistoriesByUsernameDate(
+    username: $username
+    first: $first
+    after: $after
+  ) {
+    items {
+      id
+      username
+      result
+      tryNum
+      answer
+      itemId
+      sessionId
+      partId
+      index
+      date
+      time
+    }
+    nextToken
+  }
+}
