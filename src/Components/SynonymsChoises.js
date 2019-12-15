@@ -45,6 +45,9 @@ class SynonymsChoises extends Component {
 
     handleRedoSession = () => {
         this.state.results.fill(['-','-']);
+        for (let index = 0; index < this.state.listItems.length; index ++) {
+            this.shuffleItemAnswers (index);
+        }
         this.setState({
             currentIndex: 0,
             selectedOption: '',
@@ -130,6 +133,18 @@ class SynonymsChoises extends Component {
             }
         }
         //console.log("You have submitted:", this.state.selectedOption);
+    }
+
+    shuffleItemAnswers(index) {
+        let currentItem = this.state.listItems[index];
+        let choises = [currentItem.A, currentItem.B, currentItem.C, currentItem.D, currentItem.E];
+        // random the choises list sequence
+        choises.sort(randomsort);    
+        this.state.listItems[index].A = choises[0];
+        this.state.listItems[index].B = choises[1];
+        this.state.listItems[index].C = choises[2];
+        this.state.listItems[index].D = choises[3];
+        this.state.listItems[index].E = choises[4];
     }
     
     componentDidMount() {
@@ -344,7 +359,10 @@ class SynonymsChoises extends Component {
                         this.state.listItems = listSynonyms.items;
                         const itemsLen = listSynonyms.items.length;
                         for (let index = 0; index < itemsLen; index ++) {
-                                this.state.results[index] = ['-', '-'];
+                            // initiate result.
+                            this.state.results[index] = ['-', '-'];
+
+                            this.shuffleItemAnswers (index);
                         }
                         console.log ('result array: ', this.state.results);                   
         
