@@ -9,7 +9,7 @@ import * as mutations from '../graphql/mutations'
 // import * as subscriptions from './graphql/subscriptions';
 
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import { Button, Jumbotron, Form, Col, Row, Container, ButtonGroup } from 'react-bootstrap';
+import { Button, Jumbotron, Form, Col, Row, Container, ButtonGroup, Fade } from 'react-bootstrap';
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 import { QUESTION_CONTENTS, QUESTION_TITLES } from '../consts/Const';
@@ -165,17 +165,34 @@ class SynonymsChoises extends Component {
             return(<Container> Loading </Container>);
 
         const Hint = () => {
+
             if (this.state.listItems.length > 0) {
                 let currentItem = this.state.listItems[this.state.currentIndex];
 
                 if (this.state.answered.length > 0) {
+                    let open = true;
                     if (this.state.answered !== currentItem.Answer) 
-                        return (<div> Not correct! <br/> {currentItem.Hint} <br /></div>)
-                    else 
-                        return (<div> Correct ! <br/> </div>)
+                        return (<Fade in={open}>
+                            <div id='hint'> Not correct! <br/> {currentItem.Hint} <br /></div>
+                        </Fade>);
+                    else
+                        return (<Fade in={open}>
+                            <div id='hint'> Correct! <br /></div>
+                        </Fade>);
                 }
             }
-            return (<div></div>)
+            return (<Fade in={false}><div id='hint'></div></Fade>)
+            // if (this.state.listItems.length > 0) {
+            //     let currentItem = this.state.listItems[this.state.currentIndex];
+
+            //     if (this.state.answered.length > 0) {
+            //         if (this.state.answered !== currentItem.Answer) 
+            //             return (<div> Not correct! <br/> {currentItem.Hint} <br /></div>)
+            //         else 
+            //             return (<div> Correct ! <br/> </div>)
+            //     }
+            // }
+            // return (<div></div>)
         } 
 
         const ChoisesDisplay = () => {
@@ -220,7 +237,7 @@ class SynonymsChoises extends Component {
             return (<div></div>);
         }
 
-        const ResultList = () => {
+        const ResultBar = () => {
             return (
                 <div className="bg-light" style={{display: "block"}}>
                 <ButtonGroup>
@@ -312,7 +329,7 @@ class SynonymsChoises extends Component {
         const Question = () => {
             return (
                 <Container>
-                    <ResultList />
+                    <ResultBar />
                     {/* Brand Title */}
                     <div className="text-white bg-dark px-2">
                         Lession {this.state.session} - {QUESTION_TITLES[this.state.part-1]}
@@ -329,7 +346,7 @@ class SynonymsChoises extends Component {
                                 <Button 
                                     style={{ marginLeft: "auto" }} 
                                     id="submit" 
-                                    onClick={this.handleSubmit()}> 
+                                    onClick={() => this.handleSubmit()}> 
                                     { this.state.buttonText } 
                                 </Button>
                                 </div>
@@ -339,6 +356,7 @@ class SynonymsChoises extends Component {
             );
         }
 
+        // Data already retrieved, show questions or result summary
         if (this.state.listItems.length > 0) {
             if (this.state.currentIndex >= this.state.listItems.length) {
                 return (<ResultPie />);
@@ -346,8 +364,9 @@ class SynonymsChoises extends Component {
             return (<Question />);
         }
 
+        // No data, retrieve it first. 
         return (
-            <Container>
+            <session>
                 <Connect query={graphqlOperation(queries.listSynonyms, 
                                     {"filter": { session: { eq: this.state.session},
                                                 type: { eq: this.state.part.toString()}},
@@ -377,7 +396,7 @@ class SynonymsChoises extends Component {
                   }}
                 </Connect>
 
-            </Container>
+            </session>
         );
     }
 }
