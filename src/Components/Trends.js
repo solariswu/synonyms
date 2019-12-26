@@ -98,6 +98,27 @@ class Trends extends Component {
     render () {
 
         const TrendChart = () => {
+            const itemsLen = this.state.listItems.length;
+            let amountMap = new Map();
+            let accuracyMap = new Map();
+
+            for (let index = itemsLen; index > 0; index --) {
+                let date = this.state.listItems[index-1].date;
+
+                let amount = amountMap.get(date);
+                let accuracy = accuracyMap.get(date);
+
+                amount = typeof amount === 'undefined'? 1:amount+1;
+                accuracy = typeof accuracy === 'undefined'? 0:accuracy;
+                accuracy = this.state.listItems[index-1].result === true? accuracy+1:accuracy;
+                
+                amountMap.set(date, amount);
+                accuracyMap.set(date, accuracy);
+            }
+
+            console.log ('amount:', amountMap);
+
+            console.log ('accuracy:', accuracyMap);
 
             return (
                 <Container>
@@ -114,7 +135,10 @@ class Trends extends Component {
 
             return (
                     <Connect query={graphqlOperation(queries.queryPracticeHistoriesByUsernameDate, 
-                                        { username: 'nomfa' })}>
+                                        { username: 'nomfa',
+                                          "filter": { tryNum: {eq: 1 }},
+                                          limit: 5000
+                                        })}>
                         {({ data: { queryPracticeHistoriesByUsernameDate }, loading, errors }) => {
                             console.log("loading: ", loading);
                             console.log("data:", queryPracticeHistoriesByUsernameDate);
