@@ -98,3 +98,31 @@ export const querySynonymsBySessionBaseIndex = `query QuerySynonymsBySessionBase
   }
 }
 `;
+export const queryPracticeHistoriesByUsernameDate = `
+query QueryPracticeHistoriesByUsernameDate(
+  $username: String!
+  $first: Int
+  $after: String
+) {
+  queryPracticeHistoriesByUsernameDate(
+    username: $username
+    first: $first
+    after: $after
+  ) {
+    items {
+      id
+      username
+      result
+      tryNum
+      answer
+      itemId
+      sessionId
+      partId
+      index
+      date
+      time
+    }
+    nextToken
+  }
+}
+`;

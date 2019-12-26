@@ -332,7 +332,7 @@ class SynonymsChoises extends Component {
                     <ResultBar />
                     {/* Brand Title */}
                     <div className="text-white bg-dark px-2">
-                        Lession {this.state.session} - {QUESTION_TITLES[this.state.part-1]}
+                        Lesson {this.state.session} - {QUESTION_TITLES[this.state.part-1]}
                     </div>
 
                     <ListView />

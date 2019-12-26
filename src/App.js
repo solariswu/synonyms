@@ -5,6 +5,7 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 
 import SynonymsChoises from "./Components/SynonymsChoises";
 import Home from "./Components/Home";
+import Trends from "./Components/Trends";
 
 import { withAuthenticator } from "aws-amplify-react";
 
@@ -20,6 +21,7 @@ class App extends Component {
             <BrowserRouter basename={process.env.PUBLIC_URL}>
                 <Switch>
                     <Route exact path="/synonymschoises/:session/:part" component={SynonymsChoises} />
+                    <Route path="/trends" component={Trends} />
                     <Route path="/" component={Home} />
                 </Switch>
             </BrowserRouter>
