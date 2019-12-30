@@ -155,3 +155,54 @@ query QueryPracticeHistoriesByUsernameDate(
     nextToken
   }
 }
+query GetSynonymsSrs($id: ID!) {
+  getSynonymsSRS(id: $id) {
+    id
+    username
+    contentId
+    date
+    stageIdx
+    times
+    others
+  }
+}
+query ListSynonymsSrs(
+  $filter: TableSynonymsSRSFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listSynonymsSRS(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      username
+      contentId
+      date
+      stageIdx
+      times
+      others
+    }
+    nextToken
+  }
+}
+query QuerySynonymsSrsByUsernameDateIndex(
+  $username: String!
+  $first: Int
+  $after: String
+) {
+  querySynonymsSRSByUsernameDateIndex(
+    username: $username
+    first: $first
+    after: $after
+  ) {
+    items {
+      id
+      username
+      contentId
+      date
+      stageIdx
+      times
+      others
+    }
+    nextToken
+  }
+}

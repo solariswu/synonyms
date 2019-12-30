@@ -164,3 +164,72 @@ subscription OnDeletePracticeHistory(
     time
   }
 }
+subscription OnCreateSynonymsSrs(
+  $id: ID
+  $username: String
+  $contentId: String
+  $date: AWSDate
+  $stageIdx: Int
+) {
+  onCreateSynonymsSRS(
+    id: $id
+    username: $username
+    contentId: $contentId
+    date: $date
+    stageIdx: $stageIdx
+  ) {
+    id
+    username
+    contentId
+    date
+    stageIdx
+    times
+    others
+  }
+}
+subscription OnUpdateSynonymsSrs(
+  $id: ID
+  $username: String
+  $contentId: String
+  $date: AWSDate
+  $stageIdx: Int
+) {
+  onUpdateSynonymsSRS(
+    id: $id
+    username: $username
+    contentId: $contentId
+    date: $date
+    stageIdx: $stageIdx
+  ) {
+    id
+    username
+    contentId
+    date
+    stageIdx
+    times
+    others
+  }
+}
+subscription OnDeleteSynonymsSrs(
+  $id: ID
+  $username: String
+  $contentId: String
+  $date: AWSDate
+  $stageIdx: Int
+) {
+  onDeleteSynonymsSRS(
+    id: $id
+    username: $username
+    contentId: $contentId
+    date: $date
+    stageIdx: $stageIdx
+  ) {
+    id
+    username
+    contentId
+    date
+    stageIdx
+    times
+    others
+  }
+}

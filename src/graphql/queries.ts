@@ -98,6 +98,30 @@ export const querySynonymsBySessionBaseIndex = `query QuerySynonymsBySessionBase
   }
 }
 `;
+export const queryPracticeHistories = `
+query ListPracticeHistories(
+  $filter: TablePracticeHistoryFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listPracticeHistories(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      username
+      result
+      tryNum
+      answer
+      itemId
+      sessionId
+      partId
+      index
+      date
+      time
+    }
+    nextToken
+  }
+}
+`;
 export const queryPracticeHistoriesByUsernameDate = `
 query QueryPracticeHistoriesByUsernameDate(
   $username: String!

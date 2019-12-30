@@ -33,7 +33,8 @@ class SynonymsChoises extends Component {
             answered: '',
             buttonText: 'Submit',
             username: '',
-            sendHistory: null
+            sendHistory: null,
+            addSpacedRepetition: null
         };
       }
 
@@ -71,26 +72,54 @@ class SynonymsChoises extends Component {
         let now = hh + ':' + mi + ':' + ss + 'Z';
 
      
-            const input = {
-             //   id: this.state.username + yyyy + mm + dd + hh + mi + ss + this.state.session + this.state.part + tryNum,
-                username: this.state.username,
-                result: this.state.selectedOption === currentItem.Answer,
-                tryNum: tryNum,
-                answer: this.state.selectedOption,
-                itemId: currentItem.id,
-                sessionId: currentItem.session,
-                partId: currentItem.type,
-                index: currentItem.index,
-                date: today,
-                time: now
-            }
+        const input = {
+         //   id: this.state.username + yyyy + mm + dd + hh + mi + ss + this.state.session + this.state.part + tryNum,
+            username: this.state.username,
+            result: this.state.selectedOption === currentItem.Answer,
+            tryNum: tryNum,
+            answer: this.state.selectedOption,
+            itemId: currentItem.id,
+            sessionId: currentItem.session,
+            partId: currentItem.type,
+            index: currentItem.index,
+            date: today,
+            time: now
+        }
     
-            try {
-                // console.log (input);
-                await sendHistory({input})
-            } catch (err) {
-                console.error(err);
-            }
+        try {
+            // console.log (input);
+            await sendHistory({input})
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    async addToSpacedRepetition (addSpacedRepetition) {
+        const currentItem = this.state.listItems[this.state.currentIndex];
+        const today = new Date();
+        let tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        let dd = String(tomorrow.getDate()).padStart(2, '0');
+        let mm = String(tomorrow.getMonth() + 1).padStart(2, '0'); //January is 0!
+        let yyyy = tomorrow.getFullYear();
+
+        const date = yyyy + '-' + mm + '-' + dd;
+     
+        const input = {
+         //   id: this.state.username + yyyy + mm + dd + hh + mi + ss + this.state.session + this.state.part + tryNum,
+            username: this.state.username,
+            contentId: currentItem.id,
+            date: date,
+            stageIdx: 0,
+            times: 0
+        }
+    
+        try {
+            //console.log ("SRS:", input);
+            await addSpacedRepetition({input})
+        } catch (err) {
+            console.error(err);
+        }
     }
 
     handleSubmit = () => {
@@ -122,6 +151,7 @@ class SynonymsChoises extends Component {
                 this.state.results[this.state.currentIndex] =
                     [(this.state.selectedOption === currentItem.Answer), false];
                 this.addHistory (this.state.sendHistory, 1);
+                this.addToSpacedRepetition (this.state.addSpacedRepetition);
             }
             // update answered reccord
             this.setState({
@@ -366,7 +396,7 @@ class SynonymsChoises extends Component {
 
         // No data, retrieve it first. 
         return (
-            <session>
+            <div>
                 <Connect query={graphqlOperation(queries.listSynonyms, 
                                     {"filter": { session: { eq: this.state.session},
                                                 type: { eq: this.state.part.toString()}},
@@ -396,7 +426,14 @@ class SynonymsChoises extends Component {
                   }}
                 </Connect>
 
-            </session>
+                <Connect mutation={graphqlOperation(mutations.createSynonymsSrs)}>
+                  {({mutation}) => {
+                      this.state.addSpacedRepetition = mutation;
+                      return (<div></div>);
+                  }}
+                </Connect>
+
+            </div>
         );
     }
 }

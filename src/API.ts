@@ -102,6 +102,25 @@ export type TableIntFilterInput = {
   between?: Array< number | null > | null,
 };
 
+export type TablePracticeHistoryFilterInput = {
+  id?: TableIDFilterInput | null,
+  username?: TableStringFilterInput | null,
+  result?: TableBooleanFilterInput | null,
+  tryNum?: TableIntFilterInput | null,
+  answer?: TableStringFilterInput | null,
+  itemId?: TableStringFilterInput | null,
+  sessionId?: TableIntFilterInput | null,
+  partId?: TableIntFilterInput | null,
+  index?: TableIntFilterInput | null,
+  date?: TableStringFilterInput | null,
+  time?: TableStringFilterInput | null,
+};
+
+export type TableBooleanFilterInput = {
+  ne?: boolean | null,
+  eq?: boolean | null,
+};
+
 export type CreateSynonymsMutationVariables = {
   input: CreateSynonymsInput,
 };
@@ -291,6 +310,60 @@ export type QuerySynonymsBySessionBaseIndexQuery = {
       E: string | null,
       Answer: string | null,
       Hint: string | null,
+    } | null > | null,
+    nextToken: string | null,
+  } | null,
+};
+
+export type ListPracticeHistoriesQueryVariables = {
+  filter?: TablePracticeHistoryFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListPracticeHistoriesQuery = {
+  listPracticeHistories:  {
+    __typename: "practiceHistoryConnection",
+    items:  Array< {
+      __typename: "practiceHistory",
+      id: string,
+      username: string,
+      result: boolean,
+      tryNum: number,
+      answer: string,
+      itemId: string,
+      sessionId: number | null,
+      partId: number | null,
+      index: number | null,
+      date: string | null,
+      time: string | null,
+    } | null > | null,
+    nextToken: string | null,
+  } | null,
+};
+
+export type QueryPracticeHistoriesByUsernameDateQueryVariables = {
+  username: string,
+  first?: number | null,
+  after?: string | null,
+};
+
+export type QueryPracticeHistoriesByUsernameDateQuery = {
+  queryPracticeHistoriesByUsernameDate:  {
+    __typename: "practiceHistoryConnection",
+    items:  Array< {
+      __typename: "practiceHistory",
+      id: string,
+      username: string,
+      result: boolean,
+      tryNum: number,
+      answer: string,
+      itemId: string,
+      sessionId: number | null,
+      partId: number | null,
+      index: number | null,
+      date: string | null,
+      time: string | null,
     } | null > | null,
     nextToken: string | null,
   } | null,

@@ -1,41 +1,47 @@
 
 import React, { Component } from '../../node_modules/react';
-import { Card, CardDeck} from '../../node_modules/react-bootstrap';
+import { Container, Row, Col, Card } from '../../node_modules/react-bootstrap';
 import { Link } from 'react-router-dom';
 
 class Home extends Component {
 
     render () {
-        const CardWall = (rows) => {
-            let items = [];
-            for (let i = 0; i< rows.rows; i++) {
-                items.push (<CardRow rowId={i} key={i}/>);
-            }
-            return (<div>{items}</div>);
-        }
-        const CardRow = (rowId) => {
-            let items = [];
-            for (let j = 1; j < 5; j++) {
-                let itemIdx = rowId.rowId * 4 + j;
-                items.push(<Card className="mt-1" style={{ width: '18rem' }} key={itemIdx}>
-                            <Card.Body>
-                                <Card.Title>Lesson {itemIdx}</Card.Title>
-                                <Card.Text>
-                                    Select one of the following session to start
-                                </Card.Text>
-                                <Card.Link as={Link} to={`/synonymschoises/${itemIdx}/1`}>Part 1</Card.Link>
-                                <Card.Link as={Link} to={`/synonymschoises/${itemIdx}/2`}>Part 2</Card.Link>
-                                <Card.Link as={Link} to={`/synonymschoises/${itemIdx}/3`}>Part 3</Card.Link>
-                                <br />
-                                <Card.Link as={Link} to={`/synonymschoises/${itemIdx}/4`}>Part 4</Card.Link>
-                                <Card.Link as={Link} to={`/synonymschoises/${itemIdx}/5`}>Part 5</Card.Link>
-                            </Card.Body>
-                        </Card>);
-            }
-            return (<CardDeck >{items}</CardDeck>);
-        }
+        
         return (
-            <CardWall rows={7} />
+          <Container>
+              <Row>
+                <Col>
+                    <Card className="mt-1" style={{ width: '18rem' }} key='goover'>
+                        <Card.Body>
+                           <Card.Link as={Link} to={`/goover`}>Go Over</Card.Link>
+                        </Card.Body>
+                    </Card>
+                </Col>
+                <Col>
+                    <Card className="mt-1" style={{ width: '18rem' }} key='lessons'>
+                        <Card.Body>
+                           <Card.Link as={Link} to={`/lessons`}>Lessons</Card.Link>
+                        </Card.Body>
+                    </Card>
+                </Col>
+              </Row>
+              <Row>
+                  <Col>
+                  <Card className="mt-1" style={{ width: '18rem' }} key='trends'>
+                        <Card.Body>
+                           <Card.Link as={Link} to={`/trends`}>History</Card.Link>
+                        </Card.Body>
+                    </Card>
+                  </Col>
+                  <Col>
+                  <Card className="mt-1" style={{ width: '18rem' }} key='setting'>
+                        <Card.Body>
+                           <Card.Link as={Link} to={`/setting`}>Setting</Card.Link>
+                        </Card.Body>
+                    </Card>
+                 </Col>
+              </Row>
+          </Container>
         );
     }
 }

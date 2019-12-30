@@ -12,6 +12,7 @@
     "aws-appsync": "^3.0.2",
     "bootstrap": "^4.3.1",
     "chart.js": "^2.9.3",
+    "chartjs-plugin-datalabels": "^0.7.0",
     "eslint": "^6.6.0",
     "eslint-plugin-react": "^7.16.0",
     "graphql": "^14.5.8",

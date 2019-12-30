@@ -92,3 +92,36 @@ mutation DeletePracticeHistory($input: DeletePracticeHistoryInput!) {
     time
   }
 }
+mutation CreateSynonymsSrs($input: CreateSynonymsSRSInput!) {
+  createSynonymsSRS(input: $input) {
+    id
+    username
+    contentId
+    date
+    stageIdx
+    times
+    others
+  }
+}
+mutation UpdateSynonymsSrs($input: UpdateSynonymsSRSInput!) {
+  updateSynonymsSRS(input: $input) {
+    id
+    username
+    contentId
+    date
+    stageIdx
+    times
+    others
+  }
+}
+mutation DeleteSynonymsSrs($input: DeleteSynonymsSRSInput!) {
+  deleteSynonymsSRS(input: $input) {
+    id
+    username
+    contentId
+    date
+    stageIdx
+    times
+    others
+  }
+}
