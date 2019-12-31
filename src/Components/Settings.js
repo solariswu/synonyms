@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Auth } from 'aws-amplify';
 
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import { Container, Button, Row, Col, Card } from 'react-bootstrap';
+import { Container, Row, Col, Card } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 import { Loading } from './Utilities';
