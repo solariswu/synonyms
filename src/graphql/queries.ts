@@ -150,3 +150,23 @@ query QueryPracticeHistoriesByUsernameDate(
   }
 }
 `;
+export const listSynonymsSrs = `
+query ListSynonymsSrs(
+  $filter: TableSynonymsSRSFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listSynonymsSRS(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      username
+      contentId
+      date
+      stageIdx
+      times
+      others
+    }
+    nextToken
+  }
+}
+`;
