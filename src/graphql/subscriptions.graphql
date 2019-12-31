@@ -108,6 +108,7 @@ subscription OnCreatePracticeHistory(
     index
     date
     time
+    genre
   }
 }
 subscription OnUpdatePracticeHistory(
@@ -135,6 +136,7 @@ subscription OnUpdatePracticeHistory(
     index
     date
     time
+    genre
   }
 }
 subscription OnDeletePracticeHistory(
@@ -162,6 +164,7 @@ subscription OnDeletePracticeHistory(
     index
     date
     time
+    genre
   }
 }
 subscription OnCreateSynonymsSrs(

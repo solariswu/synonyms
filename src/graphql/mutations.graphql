@@ -60,6 +60,7 @@ mutation CreatePracticeHistory($input: CreatePracticeHistoryInput!) {
     index
     date
     time
+    genre
   }
 }
 mutation UpdatePracticeHistory($input: UpdatePracticeHistoryInput!) {
@@ -75,6 +76,7 @@ mutation UpdatePracticeHistory($input: UpdatePracticeHistoryInput!) {
     index
     date
     time
+    genre
   }
 }
 mutation DeletePracticeHistory($input: DeletePracticeHistoryInput!) {
@@ -90,6 +92,7 @@ mutation DeletePracticeHistory($input: DeletePracticeHistoryInput!) {
     index
     date
     time
+    genre
   }
 }
 mutation CreateSynonymsSrs($input: CreateSynonymsSRSInput!) {

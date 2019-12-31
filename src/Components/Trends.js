@@ -153,7 +153,7 @@ class Trends extends Component {
 
         const Loading = () => {
             return (
-                <div class="d-flex justify-content-center align-items-center">
+                <div className="d-flex justify-content-center align-items-center">
                 <Spinner
                     as="span"
                     animation="grow"
@@ -168,11 +168,23 @@ class Trends extends Component {
 
         const TrendChart = () => {
             const itemsLen = this.state.listItems.length;
+            let sortArray = Array.from(this.state.listItems);
             let amountMap = new Map();
             let accuracyMap = new Map();
 
+            sortArray.sort(function(a,b) { 
+              // console.log ('a.date - b.date', a.date-b.data);
+              if (a.date > b.date) {
+                return 1;
+              }
+              if (a.date < b.date) {
+                return -1;
+              }
+              return 0;
+            });
+
             for (let index = itemsLen; index > 0; index --) {
-                let date = this.state.listItems[index-1].date;
+                let date = sortArray[index-1].date;
 
                 let amount = amountMap.get(date);
                 let accuracy = accuracyMap.get(date);
@@ -180,7 +192,7 @@ class Trends extends Component {
                 amount = typeof amount === 'undefined'? 1:amount+1;
                 accuracy = typeof accuracy === 'undefined'? 0:accuracy;
                 
-                accuracy = this.state.listItems[index-1].result === true? accuracy+1:accuracy;
+                accuracy = sortArray[index-1].result === true? accuracy+1:accuracy;
                 
                 amountMap.set(date, amount);
                 accuracyMap.set(date, accuracy);

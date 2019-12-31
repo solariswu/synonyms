@@ -83,7 +83,8 @@ class GoOver extends Component {
             partId: currentItem.type,
             index: currentItem.index,
             date: today,
-            time: now
+            time: now,
+            genre: 'goover'
         }
     
         try {
@@ -95,33 +96,33 @@ class GoOver extends Component {
     }
 
     async updateSpacedRepetition (updateSpacedRepetition) {
-        const stage = [1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377];
+        const stage = [1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 1087];
         const currentItem = this.state.listItems[this.state.currentIndex];
         const today = new Date();
-        let tomorrow = new Date(today);
-        tomorrow.setDate(tomorrow.getDate() + stage[stageIdx]);
-        let dd = String(tomorrow.getDate()).padStart(2, '0');
-        let mm = String(tomorrow.getMonth() + 1).padStart(2, '0'); //January is 0!
-        let yyyy = tomorrow.getFullYear();
+        let nextRepeatDate = new Date(today);
+        nextRepeatDate.setDate(nextRepeatDate.getDate() + stage[currentItem.stageIdx+1]);
 
-        const date = yyyy + '-' + mm + '-' + dd;
+        let dd = String(nextRepeatDate.getDate()).padStart(2, '0');
+        let mm = String(nextRepeatDate.getMonth() + 1).padStart(2, '0'); //January is 0!
+        let yyyy = nextRepeatDate.getFullYear();
+
+        const nextRepeatDateStr = yyyy + '-' + mm + '-' + dd;
      
         const input = {
-         //   id: this.state.username + yyyy + mm + dd + hh + mi + ss + this.state.session + this.state.part + tryNum,
             username: this.state.username,
             contentId: currentItem.id,
-            date: date,
-            stageIdx: 0,
-            times: 0
+            date: nextRepeatDateStr,
+            stageIdx: currentItem.stageIdx+1,
+            times: currentItem.times + 1 
         }
     
         try {
-            //console.log ("SRS:", input);
-            await addSpacedRepetition({input})
+            console.log ("SRS:", input);
+            // await updateSpacedRepetition({input})
         } catch (err) {
             console.error(err);
         }
-    }
+    } 
 
     handleSubmit = () => {
         let currentItem = this.state.listItems[this.state.currentIndex];
@@ -401,6 +402,7 @@ class GoOver extends Component {
         let yyyy = today.getFullYear();
 
         today = yyyy + '-' + mm + '-' + dd;
+
         // No data, retrieve it first. 
         return (
             <div>
@@ -413,13 +415,7 @@ class GoOver extends Component {
                         if (errors.lenth > 0 ) return (<h3>Error</h3>);
 
                         this.state.listItems = listSynonymsSrs.items;
-                        const itemsLen = listSynonymsSrs.items.length;
-                        for (let index = 0; index < itemsLen; index ++) {
-                            // initiate result.
-                            this.state.results[index] = ['-', '-'];
-
-                            this.shuffleItemAnswers (index);
-                        }
+                        
                         console.log ('result array: ', this.state.results);                   
         
                         return (<Question />);
@@ -437,6 +433,7 @@ class GoOver extends Component {
                   {({mutation}) => {
                       this.state.updateSpacedRepetition = mutation;
                       return (<div></div>);
+                      
                   }}
                 </Connect>
 

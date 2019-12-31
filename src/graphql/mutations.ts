@@ -65,11 +65,24 @@ export const createPracticeHistory = `mutation CreatePracticeHistory($input: Cre
     index
     date
     time
+    genre
   }
 }
 `;
 export const createSynonymsSrs = `mutation CreateSynonymsSrs($input: CreateSynonymsSRSInput!) {
   createSynonymsSRS(input: $input) {
+    id
+    username
+    contentId
+    date
+    stageIdx
+    times
+    others
+  }
+}
+`;
+export const updateSynonymsSrs = `mutation UpdateSynonymsSrs($input: UpdateSynonymsSRSInput!) {
+  updateSynonymsSRS(input: $input) {
     id
     username
     contentId

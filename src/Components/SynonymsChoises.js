@@ -83,7 +83,8 @@ class SynonymsChoises extends Component {
             partId: currentItem.type,
             index: currentItem.index,
             date: today,
-            time: now
+            time: now,
+            genre: 'lesson'
         }
     
         try {
@@ -99,6 +100,7 @@ class SynonymsChoises extends Component {
         const today = new Date();
         let tomorrow = new Date(today);
         tomorrow.setDate(tomorrow.getDate() + 1);
+        
         let dd = String(tomorrow.getDate()).padStart(2, '0');
         let mm = String(tomorrow.getMonth() + 1).padStart(2, '0'); //January is 0!
         let yyyy = tomorrow.getFullYear();

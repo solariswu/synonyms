@@ -105,6 +105,7 @@ query GetPracticeHistory($id: ID!) {
     index
     date
     time
+    genre
   }
 }
 query ListPracticeHistories(
@@ -125,6 +126,7 @@ query ListPracticeHistories(
       index
       date
       time
+      genre
     }
     nextToken
   }
@@ -151,6 +153,7 @@ query QueryPracticeHistoriesByUsernameDate(
       index
       date
       time
+      genre
     }
     nextToken
   }

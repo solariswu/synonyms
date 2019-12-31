@@ -47,6 +47,16 @@ export type CreatePracticeHistoryInput = {
   index?: number | null,
   date?: string | null,
   time?: string | null,
+  genre: string,
+};
+
+export type CreateSynonymsSRSInput = {
+  username: string,
+  contentId: string,
+  date: string,
+  stageIdx: number,
+  times: number,
+  others?: string | null,
 };
 
 export type TableSynonymsFilterInput = {
@@ -114,11 +124,22 @@ export type TablePracticeHistoryFilterInput = {
   index?: TableIntFilterInput | null,
   date?: TableStringFilterInput | null,
   time?: TableStringFilterInput | null,
+  genre?: TableStringFilterInput | null,
 };
 
 export type TableBooleanFilterInput = {
   ne?: boolean | null,
   eq?: boolean | null,
+};
+
+export type TableSynonymsSRSFilterInput = {
+  id?: TableIDFilterInput | null,
+  username?: TableStringFilterInput | null,
+  contentId?: TableStringFilterInput | null,
+  date?: TableStringFilterInput | null,
+  stageIdx?: TableIntFilterInput | null,
+  times?: TableIntFilterInput | null,
+  others?: TableStringFilterInput | null,
 };
 
 export type CreateSynonymsMutationVariables = {
@@ -205,6 +226,23 @@ export type CreatePracticeHistoryMutation = {
     index: number | null,
     date: string | null,
     time: string | null,
+  } | null,
+};
+
+export type CreateSynonymsSrsMutationVariables = {
+  input: CreateSynonymsSRSInput,
+};
+
+export type CreateSynonymsSrsMutation = {
+  createSynonymsSRS:  {
+    __typename: "SynonymsSRS",
+    id: string,
+    username: string,
+    contentId: string,
+    date: string,
+    stageIdx: number,
+    times: number,
+    others: string | null,
   } | null,
 };
 
@@ -364,6 +402,29 @@ export type QueryPracticeHistoriesByUsernameDateQuery = {
       index: number | null,
       date: string | null,
       time: string | null,
+    } | null > | null,
+    nextToken: string | null,
+  } | null,
+};
+
+export type ListSynonymsSrsQueryVariables = {
+  filter?: TableSynonymsSRSFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListSynonymsSrsQuery = {
+  listSynonymsSRS:  {
+    __typename: "SynonymsSRSConnection",
+    items:  Array< {
+      __typename: "SynonymsSRS",
+      id: string,
+      username: string,
+      contentId: string,
+      date: string,
+      stageIdx: number,
+      times: number,
+      others: string | null,
     } | null > | null,
     nextToken: string | null,
   } | null,
