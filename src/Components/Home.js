@@ -36,7 +36,7 @@ class Home extends Component {
                   <Col>
                   <Card className="mt-1" style={{ width: '18rem' }} key='setting'>
                         <Card.Body>
-                           <Card.Link as={Link} to={`/setting`}>Setting</Card.Link>
+                           <Card.Link as={Link} to={`/settings`}>Settings</Card.Link>
                         </Card.Body>
                     </Card>
                  </Col>

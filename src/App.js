@@ -8,6 +8,7 @@ import Home from "./Components/Home";
 import Trends from "./Components/Trends";
 import Lessons from "./Components/Lessons";
 import GoOver from "./Components/GoOver";
+import Settings from "./Components/Settings";
 
 import { withAuthenticator } from "aws-amplify-react";
 
@@ -26,6 +27,7 @@ class App extends Component {
                     <Route path="/Lessons" component={Lessons} />
                     <Route path="/trends" component={Trends} />
                     <Route path="/goover" component={GoOver} />
+                    <Route path="/settings" component={Settings} />
                     <Route path="/" component={Home} />
                 </Switch>
             </BrowserRouter>
