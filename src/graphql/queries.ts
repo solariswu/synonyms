@@ -170,3 +170,40 @@ query ListSynonymsSrs(
   }
 }
 `;
+export const querySynonymsSrsContent = `query QuerySynonymsSrsContent(
+  $filter: TableSynonymsSRSFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  querySynonymsSRSContent(
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      username
+      contentId
+      date
+      stageIdx
+      times
+      others
+      content {
+        id
+        base
+        session
+        type
+        index
+        A
+        B
+        C
+        D
+        E
+        Answer
+        Hint
+      }
+    }
+    nextToken
+  }
+}
+`;

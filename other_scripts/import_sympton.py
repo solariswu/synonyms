@@ -9,9 +9,9 @@ import xlrd
 def main():
 
     client = boto3.client('dynamodb')
-    tableName = 'synonymsTable'
+    tableName = 'SynonymsTable'
 
-    wb = xlrd.open_workbook('~/synonmous.xlsx') 
+    wb = xlrd.open_workbook('~/synonms.xlsx') 
     sheet = wb.sheet_by_index(0) 
 
     # for j in range(sheet.ncols): 

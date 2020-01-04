@@ -59,6 +59,16 @@ export type CreateSynonymsSRSInput = {
   others?: string | null,
 };
 
+export type UpdateSynonymsSRSInput = {
+  id: string,
+  username?: string | null,
+  contentId?: string | null,
+  date?: string | null,
+  stageIdx?: number | null,
+  times?: number | null,
+  others?: string | null,
+};
+
 export type TableSynonymsFilterInput = {
   id?: TableIDFilterInput | null,
   base?: TableStringFilterInput | null,
@@ -226,6 +236,7 @@ export type CreatePracticeHistoryMutation = {
     index: number | null,
     date: string | null,
     time: string | null,
+    genre: string | null,
   } | null,
 };
 
@@ -235,6 +246,23 @@ export type CreateSynonymsSrsMutationVariables = {
 
 export type CreateSynonymsSrsMutation = {
   createSynonymsSRS:  {
+    __typename: "SynonymsSRS",
+    id: string,
+    username: string,
+    contentId: string,
+    date: string,
+    stageIdx: number,
+    times: number,
+    others: string | null,
+  } | null,
+};
+
+export type UpdateSynonymsSrsMutationVariables = {
+  input: UpdateSynonymsSRSInput,
+};
+
+export type UpdateSynonymsSrsMutation = {
+  updateSynonymsSRS:  {
     __typename: "SynonymsSRS",
     id: string,
     username: string,
@@ -425,6 +453,44 @@ export type ListSynonymsSrsQuery = {
       stageIdx: number,
       times: number,
       others: string | null,
+    } | null > | null,
+    nextToken: string | null,
+  } | null,
+};
+
+export type QuerySynonymsSrsContentQueryVariables = {
+  filter?: TableSynonymsSRSFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type QuerySynonymsSrsContentQuery = {
+  querySynonymsSRSContent:  {
+    __typename: "synonymsSRSContentConnection",
+    items:  Array< {
+      __typename: "synonymsSRSContent",
+      id: string,
+      username: string | null,
+      contentId: string | null,
+      date: string | null,
+      stageIdx: number | null,
+      times: number | null,
+      others: string | null,
+      content:  {
+        __typename: "synonyms",
+        id: string,
+        base: string | null,
+        session: number,
+        type: string,
+        index: number,
+        A: string | null,
+        B: string | null,
+        C: string | null,
+        D: string | null,
+        E: string | null,
+        Answer: string | null,
+        Hint: string | null,
+      } | null,
     } | null > | null,
     nextToken: string | null,
   } | null,

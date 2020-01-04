@@ -26,15 +26,15 @@ class SynonymsChoises extends Component {
         this.state = {
             session: 0,
             part: 0,
-            items: [],
+            listItems: [],
             results: [],
             currentIndex: 0,
             selectedOption: '',
-            firstTime: true,
+            answered: '',
+            buttonText: 'Submit',
             username: '',
             sendHistory: null,
-            addSpacedRepetition: null,
-            buttonText: 'Submit'
+            addSpacedRepetition: null
         };
       }
 
@@ -45,20 +45,21 @@ class SynonymsChoises extends Component {
     }
 
     handleRedoSession = () => {
-        this.state.results.fill('-');
-        for (let index = 0; index < this.state.items.length; index ++) {
+        this.state.results.fill(['-','-']);
+        for (let index = 0; index < this.state.listItems.length; index ++) {
             this.shuffleItemAnswers (index);
         }
         this.setState({
             currentIndex: 0,
             selectedOption: '',
-            firstTime: false
+            answered: '',
+            buttonText: 'Submit'
         });
     }
 
     // async 
     async addHistory (sendHistory, tryNum) {
-        let currentItem = this.state.items[this.state.currentIndex];
+        let currentItem = this.state.listItems[this.state.currentIndex];
         let today = new Date();
         let dd = String(today.getDate()).padStart(2, '0');
         let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -95,7 +96,7 @@ class SynonymsChoises extends Component {
     }
 
     async addToSpacedRepetition (addSpacedRepetition) {
-        const currentItem = this.state.items[this.state.currentIndex];
+        const currentItem = this.state.listItems[this.state.currentIndex];
         const today = new Date();
         let tomorrow = new Date(today);
         tomorrow.setDate(tomorrow.getDate() + 1);
@@ -124,11 +125,12 @@ class SynonymsChoises extends Component {
     }
 
     handleSubmit = () => {
-        let currentItem = this.state.items[this.state.currentIndex];
+        let currentItem = this.state.listItems[this.state.currentIndex];
 
         if (this.state.buttonText === 'Next') {
             // clear state
             this.setState({
+                answered: '',
                 selectedOption: '',
                 buttonText: 'Submit'
             });
@@ -136,28 +138,45 @@ class SynonymsChoises extends Component {
             this.setState({ currentIndex: this.state.currentIndex + 1 });
         }
         // the user made choise / selected one of the radio input
-        else if (this.state.selectedOption.length > 0 ) {
-            this.setState({ buttonText: 'Next' });
-            this.state.results[this.state.currentIndex] =
-                (this.state.selectedOption === currentItem.Answer);
-            if (this.state.firstTime === true)
+        else if (this.state.selectedOption.length > 0 &&
+            this.state.answered !== this.state.selectedOption) {
+            // second try, change button text
+            if (this.state.answered !== '') {
+                this.setState({ buttonText: 'Next' });
+                this.state.results[this.state.currentIndex][1] =
+                    (this.state.selectedOption === currentItem.Answer);
+                this.addHistory (this.state.sendHistory, 2);
+            }
+            // first try, update the resultBreadcum accordingly
+            else {
+                this.setState({ buttonText: 'Try Again' })
+                this.state.results[this.state.currentIndex] =
+                    [(this.state.selectedOption === currentItem.Answer), false];
                 this.addHistory (this.state.sendHistory, 1);
-            else 
-                this.addHistory (this.state.sendHistory, 2)
+                this.addToSpacedRepetition (this.state.addSpacedRepetition);
+            }
+            // update answered reccord
+            this.setState({
+                answered: this.state.selectedOption
+            });
+            // correct answer, change the button to 'Next'
+            if (this.state.selectedOption === currentItem.Answer) {
+                this.setState({ buttonText: 'Next' })
+            }
         }
         //console.log("You have submitted:", this.state.selectedOption);
     }
 
     shuffleItemAnswers(index) {
-        let currentItem = this.state.items[index];
+        let currentItem = this.state.listItems[index];
         let choises = [currentItem.A, currentItem.B, currentItem.C, currentItem.D, currentItem.E];
         // random the choises list sequence
         choises.sort(randomsort);    
-        this.state.items[index].A = choises[0];
-        this.state.items[index].B = choises[1];
-        this.state.items[index].C = choises[2];
-        this.state.items[index].D = choises[3];
-        this.state.items[index].E = choises[4];
+        this.state.listItems[index].A = choises[0];
+        this.state.listItems[index].B = choises[1];
+        this.state.listItems[index].C = choises[2];
+        this.state.listItems[index].D = choises[3];
+        this.state.listItems[index].E = choises[4];
     }
     
     componentDidMount() {
@@ -169,8 +188,6 @@ class SynonymsChoises extends Component {
             }).then(user => {
                 this.setState({username: user.username});
             });
-
-            //todo: search backend whether is first time testing today
     }
 
     render() {
@@ -181,12 +198,12 @@ class SynonymsChoises extends Component {
 
         const Hint = () => {
 
-            if (this.state.items.length > 0) {
-                let currentItem = this.state.items[this.state.currentIndex];
+            if (this.state.listItems.length > 0) {
+                let currentItem = this.state.listItems[this.state.currentIndex];
 
-                if (this.state.buttonText.localeCompare ('Next') === 0) {
+                if (this.state.answered.length > 0) {
                     let open = true;
-                    if (this.state.selectedOption !== currentItem.Answer) 
+                    if (this.state.answered !== currentItem.Answer) 
                         return (<Fade in={open}>
                             <div id='hint'> Not correct! <br/> {currentItem.Hint} <br /></div>
                         </Fade>);
@@ -197,11 +214,24 @@ class SynonymsChoises extends Component {
                 }
             }
             return (<Fade in={false}><div id='hint'></div></Fade>)
+            // if (this.state.listItems.length > 0) {
+            //     let currentItem = this.state.listItems[this.state.currentIndex];
+
+            //     if (this.state.answered.length > 0) {
+            //         if (this.state.answered !== currentItem.Answer) 
+            //             return (<div> Not correct! <br/> {currentItem.Hint} <br /></div>)
+            //         else 
+            //             return (<div> Correct ! <br/> </div>)
+            //     }
+            // }
+            // return (<div></div>)
         } 
 
         const ChoisesDisplay = () => {
-            let currentItem = this.state.items[this.state.currentIndex];
+            let currentItem = this.state.listItems[this.state.currentIndex];
             let choises = [currentItem.A, currentItem.B, currentItem.C, currentItem.D, currentItem.E];
+            // random the choises list sequence
+            // choises.sort(randomsort);
 
             return (
                 <fieldset>
@@ -216,7 +246,7 @@ class SynonymsChoises extends Component {
                                             onChange={this.handleOptionChange}
                                             checked={this.state.selectedOption === choise}
                                             key={choise}
-                                            disabled={this.state.buttonText.localeCompare('Next') === 0} />)}
+                                            disabled={this.state.buttonText === 'Next'} />)}
                     </Col>
                     </Form.Group>
                 </fieldset>
@@ -224,8 +254,8 @@ class SynonymsChoises extends Component {
         }
 
         const ListView = () => {
-            let currentItem = this.state.items[this.state.currentIndex];
-            if (this.state.items.length > 0) {
+            let currentItem = this.state.listItems[this.state.currentIndex];
+            if (this.state.listItems.length > 0) {
                 return (
                     <Jumbotron>
                         <h5> {QUESTION_CONTENTS[this.state.part-1]} </h5>
@@ -244,9 +274,9 @@ class SynonymsChoises extends Component {
                 <div className="bg-light" style={{display: "block"}}>
                 <ButtonGroup>
                     { this.state.results.map ((result, index) => <Button
-                                                                  variant={result === '-' ?
+                                                                  variant={result[0] === '-' ?
                                                                            'secondary' :
-                                                                           result === true ?
+                                                                           result[0] === true ?
                                                                            'success' : 'danger'}
                                                                   size="sm"
                                                                   key={index}
@@ -264,29 +294,36 @@ class SynonymsChoises extends Component {
             let data = {
                 labels: [
                     'Correct',
+                    '2ndTry',
                     'Wrong'
                 ],
                 datasets: [{
-                    data: [0,0],
+                    data: [0,0,0],
                     backgroundColor: [
                     '#36A2EB',
+                    '#FFCE56',
                     '#FF6384'
                     ],
                     hoverBackgroundColor: [
                     '#36A2EB',
+                    '#FFCE56',
                     '#FF6384'
                     ]
                 }]
             };
 
-            let amountTrue = 0;
+            let firstTrue = 0;
+            let secondTrue = 0;
             for (let i = 0; i < this.state.results.length; i++) {
-              if (this.state.results[i] === true) 
-                amountTrue ++;
+              if (this.state.results[i][0] === true) 
+                firstTrue ++;
+              if (this.state.results[i][1] === true)
+                secondTrue ++;
             }
 
-            data.datasets[0].data[0] = amountTrue;
-            data.datasets[0].data[1] = this.state.results.length - amountTrue;
+            data.datasets[0].data[0] = firstTrue;
+            data.datasets[0].data[1] = secondTrue;
+            data.datasets[0].data[2] = this.state.results.length - firstTrue - secondTrue;
 
             return (
                 <Container>
@@ -296,8 +333,9 @@ class SynonymsChoises extends Component {
                         <Col></Col>
                         <Col>
                         <ul>
-                        <li>Correct: {amountTrue}</li>
-                        <li>Wrong: {this.state.results.length - amountTrue}</li>
+                        <li>Correct 1st: {firstTrue}</li>
+                        <li>Correct 2nd: {secondTrue}</li>
+                        <li>Wrong: {this.state.results.length - firstTrue - secondTrue}</li>
                         </ul>
                         </Col>
                         <Col></Col>
@@ -351,8 +389,8 @@ class SynonymsChoises extends Component {
         }
 
         // Data already retrieved, show questions or result summary
-        if (this.state.items.length > 0) {
-            if (this.state.currentIndex >= this.state.items.length) {
+        if (this.state.listItems.length > 0) {
+            if (this.state.currentIndex >= this.state.listItems.length) {
                 return (<ResultPie />);
             }
             return (<Question />);
@@ -369,12 +407,12 @@ class SynonymsChoises extends Component {
                     if (loading || !listSynonyms) return (<h3>Loading...</h3>);
                         if (errors.lenth > 0 ) return (<h3>Error</h3>);
 
-                        this.state.items = listSynonyms.items;
+                        this.state.listItems = listSynonyms.items;
                         const itemsLen = listSynonyms.items.length;
-                        // initiate result.
-
                         for (let index = 0; index < itemsLen; index ++) {
-                            this.state.results[index] = '-';
+                            // initiate result.
+                            this.state.results[index] = ['-', '-'];
+
                             this.shuffleItemAnswers (index);
                         }
                         console.log ('result array: ', this.state.results);                   

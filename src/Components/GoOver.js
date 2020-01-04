@@ -15,6 +15,8 @@ import { Link } from 'react-router-dom';
 import { QUESTION_CONTENTS, QUESTION_TITLES } from '../consts/Const';
 import { Pie } from 'react-chartjs-2';
 
+import { Loading } from './Utilities';
+
 
 function randomsort(a, b) {
     return Math.random()>.5 ? -1 : 1;
@@ -24,8 +26,8 @@ class GoOver extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            session: 0,
-            part: 0,
+            // session: 0,
+            // part: 0,
             listItems: [],
             results: [],
             currentIndex: 0,
@@ -75,13 +77,13 @@ class GoOver extends Component {
         const input = {
          //   id: this.state.username + yyyy + mm + dd + hh + mi + ss + this.state.session + this.state.part + tryNum,
             username: this.state.username,
-            result: this.state.selectedOption === currentItem.Answer,
+            result: this.state.selectedOption === currentItem.content.Answer,
             tryNum: tryNum,
             answer: this.state.selectedOption,
-            itemId: currentItem.id,
-            sessionId: currentItem.session,
-            partId: currentItem.type,
-            index: currentItem.index,
+            itemId: currentItem.content.id,
+            sessionId: currentItem.content.session,
+            partId: currentItem.content.type,
+            index: currentItem.content.index,
             date: today,
             time: now,
             genre: 'goover'
@@ -153,7 +155,7 @@ class GoOver extends Component {
                 this.state.results[this.state.currentIndex] =
                     [(this.state.selectedOption === currentItem.Answer), false];
                 this.addHistory (this.state.sendHistory, 1);
-                this.addToSpacedRepetition (this.state.addSpacedRepetition);
+                this.updateSpacedRepetition (this.state.updateSpacedRepetition);
             }
             // update answered reccord
             this.setState({
@@ -168,20 +170,20 @@ class GoOver extends Component {
     }
 
     shuffleItemAnswers(index) {
-        let currentItem = this.state.listItems[index];
+        let currentItem = this.state.listItems[index].content;
         let choises = [currentItem.A, currentItem.B, currentItem.C, currentItem.D, currentItem.E];
         // random the choises list sequence
         choises.sort(randomsort);    
-        this.state.listItems[index].A = choises[0];
-        this.state.listItems[index].B = choises[1];
-        this.state.listItems[index].C = choises[2];
-        this.state.listItems[index].D = choises[3];
-        this.state.listItems[index].E = choises[4];
+        this.state.listItems[index].content.A = choises[0];
+        this.state.listItems[index].content.B = choises[1];
+        this.state.listItems[index].content.C = choises[2];
+        this.state.listItems[index].content.D = choises[3];
+        this.state.listItems[index].content.E = choises[4];
     }
     
     componentDidMount() {
-            const {session, part} = this.props.match.params;
-            this.setState({session: session, part: part});
+            // const {session, part} = this.props.match.params;
+            // this.setState({session: session, part: part});
 
             Auth.currentAuthenticatedUser({
                 bypassCache: false  
@@ -193,13 +195,13 @@ class GoOver extends Component {
     render() {
         //console.log ('session:', this.state.session, ' part:', this.state.part);
 
-        if (this.state.session === 0)
-            return(<Container> Loading </Container>);
+        // if (this.state.session === 0)
+        //     return(<Container> Loading </Container>);
 
         const Hint = () => {
 
             if (this.state.listItems.length > 0) {
-                let currentItem = this.state.listItems[this.state.currentIndex];
+                let currentItem = this.state.listItems[this.state.currentIndex].content;
 
                 if (this.state.answered.length > 0) {
                     let open = true;
@@ -228,7 +230,7 @@ class GoOver extends Component {
         } 
 
         const ChoisesDisplay = () => {
-            let currentItem = this.state.listItems[this.state.currentIndex];
+            let currentItem = this.state.listItems[this.state.currentIndex].content;
             let choises = [currentItem.A, currentItem.B, currentItem.C, currentItem.D, currentItem.E];
             // random the choises list sequence
             // choises.sort(randomsort);
@@ -254,7 +256,7 @@ class GoOver extends Component {
         }
 
         const ListView = () => {
-            let currentItem = this.state.listItems[this.state.currentIndex];
+            let currentItem = this.state.listItems[this.state.currentIndex].content;
             if (this.state.listItems.length > 0) {
                 return (
                     <Jumbotron>
@@ -403,18 +405,29 @@ class GoOver extends Component {
 
         today = yyyy + '-' + mm + '-' + dd;
 
+        if (this.state.username === "") {
+            return (<Loading />);
+        }
+
         // No data, retrieve it first. 
         return (
             <div>
-                <Connect query={graphqlOperation(queries.listSynonymsSrs, 
+                <Connect query={graphqlOperation(queries.querySynonymsSrsContent,
                                     {"filter": { username: { eq: this.state.username},
-                                                date: { eq: today}},
+                                                 date: { le: today}},
                                                 limit: 15000})}>
-                    {({ data: { listSynonymsSrs }, loading, errors }) => {
-                    if (loading || !listSynonymsSrs) return (<h3>Loading...</h3>);
+                    {({ data: { querySynonymsSRSContent }, loading, errors }) => {
+                    if (loading || !querySynonymsSRSContent) return (<h3>Loading...</h3>);
                         if (errors.lenth > 0 ) return (<h3>Error</h3>);
 
-                        this.state.listItems = listSynonymsSrs.items;
+                        this.state.listItems = querySynonymsSRSContent.items;
+
+                        const itemsLen = querySynonymsSRSContent.items.length;
+                        for (let index = 0; index < itemsLen; index ++) {
+                            // initiate result.
+                            this.state.results[index] = ['-', '-'];
+                            this.shuffleItemAnswers (index);
+                        }
                         
                         console.log ('result array: ', this.state.results);                   
         
