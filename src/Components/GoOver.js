@@ -26,9 +26,7 @@ class GoOver extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            // session: 0,
-            // part: 0,
-            listItems: [],
+            items: [],
             results: [],
             currentIndex: 0,
             selectedOption: '',
@@ -47,8 +45,8 @@ class GoOver extends Component {
     }
 
     handleRedoSession = () => {
-        this.state.results.fill(['-','-']);
-        for (let index = 0; index < this.state.listItems.length; index ++) {
+        this.state.results.fill('-');
+        for (let index = 0; index < this.state.items.length; index ++) {
             this.shuffleItemAnswers (index);
         }
         this.setState({
@@ -61,7 +59,7 @@ class GoOver extends Component {
 
     // async 
     async addHistory (sendHistory, tryNum) {
-        let currentItem = this.state.listItems[this.state.currentIndex];
+        let currentItem = this.state.items[this.state.currentIndex];
         let today = new Date();
         let dd = String(today.getDate()).padStart(2, '0');
         let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -99,7 +97,7 @@ class GoOver extends Component {
 
     async updateSpacedRepetition (updateSpacedRepetition) {
         const stage = [1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 1087];
-        const currentItem = this.state.listItems[this.state.currentIndex];
+        const currentItem = this.state.items[this.state.currentIndex];
         const today = new Date();
         let nextRepeatDate = new Date(today);
         nextRepeatDate.setDate(nextRepeatDate.getDate() + stage[currentItem.stageIdx+1]);
@@ -127,7 +125,7 @@ class GoOver extends Component {
     } 
 
     handleSubmit = () => {
-        let currentItem = this.state.listItems[this.state.currentIndex];
+        let currentItem = this.state.items[this.state.currentIndex];
 
         if (this.state.buttonText === 'Next') {
             // clear state
@@ -140,45 +138,26 @@ class GoOver extends Component {
             this.setState({ currentIndex: this.state.currentIndex + 1 });
         }
         // the user made choise / selected one of the radio input
-        else if (this.state.selectedOption.length > 0 &&
-            this.state.answered !== this.state.selectedOption) {
-            // second try, change button text
-            if (this.state.answered !== '') {
-                this.setState({ buttonText: 'Next' });
-                this.state.results[this.state.currentIndex][1] =
-                    (this.state.selectedOption === currentItem.Answer);
-                this.addHistory (this.state.sendHistory, 2);
-            }
-            // first try, update the resultBreadcum accordingly
-            else {
-                this.setState({ buttonText: 'Try Again' })
-                this.state.results[this.state.currentIndex] =
-                    [(this.state.selectedOption === currentItem.Answer), false];
-                this.addHistory (this.state.sendHistory, 1);
-                this.updateSpacedRepetition (this.state.updateSpacedRepetition);
-            }
-            // update answered reccord
-            this.setState({
-                answered: this.state.selectedOption
-            });
-            // correct answer, change the button to 'Next'
-            if (this.state.selectedOption === currentItem.Answer) {
-                this.setState({ buttonText: 'Next' })
-            }
+        else if (this.state.selectedOption.length > 0 ) {
+            this.setState({ buttonText: 'Next' });
+            this.state.results[this.state.currentIndex] =
+                (this.state.selectedOption === currentItem.Answer);
+            this.addHistory (this.state.sendHistory, 3);
+            this.updateSpacedRepetition (this.state.updateSpacedRepetition);
         }
         //console.log("You have submitted:", this.state.selectedOption);
     }
 
     shuffleItemAnswers(index) {
-        let currentItem = this.state.listItems[index].content;
+        let currentItem = this.state.items[index].content;
         let choises = [currentItem.A, currentItem.B, currentItem.C, currentItem.D, currentItem.E];
         // random the choises list sequence
         choises.sort(randomsort);    
-        this.state.listItems[index].content.A = choises[0];
-        this.state.listItems[index].content.B = choises[1];
-        this.state.listItems[index].content.C = choises[2];
-        this.state.listItems[index].content.D = choises[3];
-        this.state.listItems[index].content.E = choises[4];
+        this.state.items[index].content.A = choises[0];
+        this.state.items[index].content.B = choises[1];
+        this.state.items[index].content.C = choises[2];
+        this.state.items[index].content.D = choises[3];
+        this.state.items[index].content.E = choises[4];
     }
     
     componentDidMount() {
@@ -200,12 +179,12 @@ class GoOver extends Component {
 
         const Hint = () => {
 
-            if (this.state.listItems.length > 0) {
-                let currentItem = this.state.listItems[this.state.currentIndex].content;
+            if (this.state.items.length > 0) {
+                let currentItem = this.state.items[this.state.currentIndex].content;
 
-                if (this.state.answered.length > 0) {
+                if (this.state.buttonText.localeCompare ('Next') === 0) {
                     let open = true;
-                    if (this.state.answered !== currentItem.Answer) 
+                    if (this.state.selectedOption !== currentItem.Answer) 
                         return (<Fade in={open}>
                             <div id='hint'> Not correct! <br/> {currentItem.Hint} <br /></div>
                         </Fade>);
@@ -216,21 +195,10 @@ class GoOver extends Component {
                 }
             }
             return (<Fade in={false}><div id='hint'></div></Fade>)
-            // if (this.state.listItems.length > 0) {
-            //     let currentItem = this.state.listItems[this.state.currentIndex];
-
-            //     if (this.state.answered.length > 0) {
-            //         if (this.state.answered !== currentItem.Answer) 
-            //             return (<div> Not correct! <br/> {currentItem.Hint} <br /></div>)
-            //         else 
-            //             return (<div> Correct ! <br/> </div>)
-            //     }
-            // }
-            // return (<div></div>)
         } 
 
         const ChoisesDisplay = () => {
-            let currentItem = this.state.listItems[this.state.currentIndex].content;
+            let currentItem = this.state.items[this.state.currentIndex].content;
             let choises = [currentItem.A, currentItem.B, currentItem.C, currentItem.D, currentItem.E];
             // random the choises list sequence
             // choises.sort(randomsort);
@@ -248,7 +216,7 @@ class GoOver extends Component {
                                             onChange={this.handleOptionChange}
                                             checked={this.state.selectedOption === choise}
                                             key={choise}
-                                            disabled={this.state.buttonText === 'Next'} />)}
+                                            disabled={this.state.buttonText.localeCompare('Next') === 0} />)}
                     </Col>
                     </Form.Group>
                 </fieldset>
@@ -256,11 +224,11 @@ class GoOver extends Component {
         }
 
         const ListView = () => {
-            let currentItem = this.state.listItems[this.state.currentIndex].content;
-            if (this.state.listItems.length > 0) {
+            let currentItem = this.state.items[this.state.currentIndex].content;
+            if (this.state.items.length > 0) {
                 return (
                     <Jumbotron>
-                        <h5> {QUESTION_CONTENTS[this.state.part-1]} </h5>
+                        <h5> {QUESTION_CONTENTS[currentItem.part-1]} </h5>
                         <br />
                         <h3> {currentItem.base} </h3>
                         <br />
@@ -276,9 +244,9 @@ class GoOver extends Component {
                 <div className="bg-light" style={{display: "block"}}>
                 <ButtonGroup>
                     { this.state.results.map ((result, index) => <Button
-                                                                  variant={result[0] === '-' ?
+                                                                  variant={result === '-' ?
                                                                            'secondary' :
-                                                                           result[0] === true ?
+                                                                           result === true ?
                                                                            'success' : 'danger'}
                                                                   size="sm"
                                                                   key={index}
@@ -296,63 +264,48 @@ class GoOver extends Component {
             let data = {
                 labels: [
                     'Correct',
-                    '2ndTry',
                     'Wrong'
                 ],
                 datasets: [{
-                    data: [0,0,0],
+                    data: [0,0],
                     backgroundColor: [
                     '#36A2EB',
-                    '#FFCE56',
                     '#FF6384'
                     ],
                     hoverBackgroundColor: [
                     '#36A2EB',
-                    '#FFCE56',
                     '#FF6384'
                     ]
                 }]
             };
 
-            let firstTrue = 0;
-            let secondTrue = 0;
+            let amountTrue = 0;
             for (let i = 0; i < this.state.results.length; i++) {
-              if (this.state.results[i][0] === true) 
-                firstTrue ++;
-              if (this.state.results[i][1] === true)
-                secondTrue ++;
+                if (this.state.results[i] === true) 
+                    amountTrue ++;
             }
 
-            data.datasets[0].data[0] = firstTrue;
-            data.datasets[0].data[1] = secondTrue;
-            data.datasets[0].data[2] = this.state.results.length - firstTrue - secondTrue;
+            data.datasets[0].data[0] = amountTrue;
+            data.datasets[0].data[1] = this.state.results.length - amountTrue;
 
             return (
                 <Container>
-                    <h4 className="text-center">You've finished Session {this.state.session} Part {this.state.part}</h4>
+                    <h4 className="text-center">You've finished today's Review</h4>
                     <Pie data={data} />
                     <Row>
                         <Col></Col>
                         <Col>
                         <ul>
-                        <li>Correct 1st: {firstTrue}</li>
-                        <li>Correct 2nd: {secondTrue}</li>
-                        <li>Wrong: {this.state.results.length - firstTrue - secondTrue}</li>
+                        <li>Correct: {amountTrue}</li>
+                        <li>Wrong: {this.state.results.length - amountTrue}</li>
                         </ul>
                         </Col>
                         <Col></Col>
                     </Row>
                     <Row>
-                        <Col className="col"></Col>
                         <Col className="col">
-                        <Button onClick={this.handleRedoSession}>
-                            Retry
-                        </Button>
-                        </Col>
-                        <Col className="col"></Col>
-                        <Col className="col">
-                        <Button as={Link} to="/">
-                            Back
+                        <Button className="mx-auto" as={Link} to="/">
+                            Home
                         </Button>
                         </Col>
                     </Row>
@@ -366,7 +319,8 @@ class GoOver extends Component {
                     <ResultBar />
                     {/* Brand Title */}
                     <div className="text-white bg-dark px-2">
-                        Lesson {this.state.session} - {QUESTION_TITLES[this.state.part-1]}
+                        Go Over 
+                        {/* Lesson {this.currentItem.content.session} - {QUESTION_TITLES[this.currentItem.content.part-1]} */}
                     </div>
 
                     <ListView />
@@ -391,8 +345,8 @@ class GoOver extends Component {
         }
 
         // Data already retrieved, show questions or result summary
-        if (this.state.listItems.length > 0) {
-            if (this.state.currentIndex >= this.state.listItems.length) {
+        if (this.state.items.length > 0) {
+            if (this.state.currentIndex >= this.state.items.length) {
                 return (<ResultPie />);
             }
             return (<Question />);
@@ -420,12 +374,12 @@ class GoOver extends Component {
                     if (loading || !querySynonymsSRSContent) return (<h3>Loading...</h3>);
                         if (errors.lenth > 0 ) return (<h3>Error</h3>);
 
-                        this.state.listItems = querySynonymsSRSContent.items;
+                        this.state.items = querySynonymsSRSContent.items;
 
                         const itemsLen = querySynonymsSRSContent.items.length;
                         for (let index = 0; index < itemsLen; index ++) {
                             // initiate result.
-                            this.state.results[index] = ['-', '-'];
+                            this.state.results[index] = '-';
                             this.shuffleItemAnswers (index);
                         }
                         

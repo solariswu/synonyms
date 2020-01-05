@@ -111,13 +111,13 @@ class SynonymsChoises extends Component {
             username: this.state.username,
             contentId: currentItem.id,
             date: date,
-            stageIdx: 0,
-            times: 0
+            stageIdx: 0, // initial value for SRS item, SRS will update that later
+            times: 0 // initial value for SRS item
         }
     
         try {
-            //console.log ("SRS:", input);
-            await addSpacedRepetition({input})
+            console.log ("add to SRS:", input);
+            // await addSpacedRepetition({input})
         } catch (err) {
             console.error(err);
         }
@@ -140,8 +140,11 @@ class SynonymsChoises extends Component {
             this.setState({ buttonText: 'Next' });
             this.state.results[this.state.currentIndex] =
                 (this.state.selectedOption === currentItem.Answer);
-            if (this.state.firstTime === true)
+            if (this.state.firstTime === true) {
                 this.addHistory (this.state.sendHistory, 1);
+                if (this.state.selectedOption !== currentItem.Answer) 
+                    this.addToSpacedRepetition (this.state.addSpacedRepetition);
+            }
             else 
                 this.addHistory (this.state.sendHistory, 2)
         }
