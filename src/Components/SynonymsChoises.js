@@ -63,9 +63,9 @@ class SynonymsChoises extends Component {
         let dd = String(today.getDate()).padStart(2, '0');
         let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
         let yyyy = today.getFullYear();
-        let hh = today.getHours();
-        let mi = today.getMinutes();
-        let ss = today.getSeconds();
+        let hh = String(today.getHours()).padStart(2, '0');
+        let mi = String(today.getMinutes()).padStart(2, '0');
+        let ss = String(today.getSeconds()).padStart('2', 0);
 
         today = yyyy + '-' + mm + '-' + dd;
         let now = hh + ':' + mi + ':' + ss + 'Z';
@@ -116,8 +116,8 @@ class SynonymsChoises extends Component {
         }
     
         try {
-            console.log ("add to SRS:", input);
-            // await addSpacedRepetition({input})
+            // console.log ("add to SRS:", input);
+            await addSpacedRepetition({input})
         } catch (err) {
             console.error(err);
         }

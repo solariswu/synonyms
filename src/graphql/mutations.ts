@@ -69,9 +69,8 @@ export const createPracticeHistory = `mutation CreatePracticeHistory($input: Cre
   }
 }
 `;
-export const createSynonymsSrs = `mutation CreateSynonymsSrs($input: CreateSynonymsSRSInput!) {
-  createSynonymsSRS(input: $input) {
-    id
+export const createSynonymsSrs = `mutation CreateSynonymsSrs($input: CreateSynonymsSrsInput!) {
+  createSynonymsSrs(input: $input) {
     username
     contentId
     date
@@ -81,9 +80,8 @@ export const createSynonymsSrs = `mutation CreateSynonymsSrs($input: CreateSynon
   }
 }
 `;
-export const updateSynonymsSrs = `mutation UpdateSynonymsSrs($input: UpdateSynonymsSRSInput!) {
-  updateSynonymsSRS(input: $input) {
-    id
+export const updateSynonymsSrs = `mutation UpdateSynonymsSrs($input: UpdateSynonymsSrsInput!) {
+  updateSynonymsSrs(input: $input) {
     username
     contentId
     date

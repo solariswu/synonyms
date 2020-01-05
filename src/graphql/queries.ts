@@ -152,13 +152,12 @@ query QueryPracticeHistoriesByUsernameDate(
 `;
 export const listSynonymsSrs = `
 query ListSynonymsSrs(
-  $filter: TableSynonymsSRSFilterInput
+  $filter: TableSynonymsSrsFilterInput
   $limit: Int
   $nextToken: String
 ) {
-  listSynonymsSRS(filter: $filter, limit: $limit, nextToken: $nextToken) {
+  listSynonymsSrs(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
-      id
       username
       contentId
       date
@@ -171,17 +170,16 @@ query ListSynonymsSrs(
 }
 `;
 export const querySynonymsSrsContent = `query QuerySynonymsSrsContent(
-  $filter: TableSynonymsSRSFilterInput
+  $filter: TableSynonymsSrsFilterInput
   $limit: Int
   $nextToken: String
 ) {
-  querySynonymsSRSContent(
+  querySynonymsSrsContent(
     filter: $filter
     limit: $limit
     nextToken: $nextToken
   ) {
     items {
-      id
       username
       contentId
       date
