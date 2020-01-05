@@ -15,10 +15,7 @@ import { Link } from 'react-router-dom';
 import { QUESTION_CONTENTS, QUESTION_TITLES } from '../consts/Const';
 import { Pie } from 'react-chartjs-2';
 
-
-function randomsort(a, b) {
-    return Math.random()>.5 ? -1 : 1;
-}
+import { getFormatedDate, getFormatedTime, randomsort } from './Utilities';
 
 class SynonymsChoises extends Component {
     constructor(props) {
@@ -58,18 +55,8 @@ class SynonymsChoises extends Component {
 
     // async 
     async addHistory (sendHistory, tryNum) {
-        let currentItem = this.state.items[this.state.currentIndex];
-        let today = new Date();
-        let dd = String(today.getDate()).padStart(2, '0');
-        let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-        let yyyy = today.getFullYear();
-        let hh = String(today.getHours()).padStart(2, '0');
-        let mi = String(today.getMinutes()).padStart(2, '0');
-        let ss = String(today.getSeconds()).padStart('2', 0);
-
-        today = yyyy + '-' + mm + '-' + dd;
-        let now = hh + ':' + mi + ':' + ss + 'Z';
-
+        const currentItem = this.state.items[this.state.currentIndex];
+        const date = new Date();
      
         const input = {
          //   id: this.state.username + yyyy + mm + dd + hh + mi + ss + this.state.session + this.state.part + tryNum,
@@ -81,8 +68,8 @@ class SynonymsChoises extends Component {
             sessionId: currentItem.session,
             partId: currentItem.type,
             index: currentItem.index,
-            date: today,
-            time: now,
+            date: getFormatedDate(date),
+            time: getFormatedTime(date),
             genre: 'lesson'
         }
     
@@ -98,19 +85,16 @@ class SynonymsChoises extends Component {
         const currentItem = this.state.items[this.state.currentIndex];
         const today = new Date();
         let tomorrow = new Date(today);
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        
-        let dd = String(tomorrow.getDate()).padStart(2, '0');
-        let mm = String(tomorrow.getMonth() + 1).padStart(2, '0'); //January is 0!
-        let yyyy = tomorrow.getFullYear();
+        console.log ("today:", today);
+        console.log ("tomorrow:", tomorrow);
 
-        const date = yyyy + '-' + mm + '-' + dd;
+        tomorrow.setDate(tomorrow.getDate() + 1);
      
         const input = {
          //   id: this.state.username + yyyy + mm + dd + hh + mi + ss + this.state.session + this.state.part + tryNum,
             username: this.state.username,
             contentId: currentItem.id,
-            date: date,
+            date: getFormatedDate(tomorrow),
             stageIdx: 0, // initial value for SRS item, SRS will update that later
             times: 0 // initial value for SRS item
         }
@@ -191,7 +175,7 @@ class SynonymsChoises extends Component {
                     let open = true;
                     if (this.state.selectedOption !== currentItem.Answer) 
                         return (<Fade in={open}>
-                            <div id='hint'> Not correct! <br/> {currentItem.Hint} <br /></div>
+                            <div id='hint'> <p className="text-danger">Not correct! </p> {currentItem.Hint} <br /></div>
                         </Fade>);
                     else
                         return (<Fade in={open}>

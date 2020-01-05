@@ -366,17 +366,19 @@ class GoOver extends Component {
         // No data, retrieve it first. 
         return (
             <div>
-                <Connect query={graphqlOperation(queries.querySynonymsSrsContent,
-                                    {"filter": { username: { eq: this.state.username},
-                                                 date: { le: today}},
-                                                limit: 15000})}>
-                    {({ data: { querySynonymsSRSContent }, loading, errors }) => {
-                    if (loading || !querySynonymsSRSContent) return (<h3>Loading...</h3>);
+                <Connect query={
+                    graphqlOperation(queries.querySynonymsSrsContent, {
+                                        "filter": { 
+                                            username: { eq: this.state.username},
+                                            date: { le: today}},
+                                        limit: 15000})}>
+                    {({ data: { querySynonymsSrsContent }, loading, errors }) => {
+                    if (loading || !querySynonymsSrsContent) return (<h3>Loading...</h3>);
                         if (errors.lenth > 0 ) return (<h3>Error</h3>);
 
-                        this.state.items = querySynonymsSRSContent.items;
+                        this.state.items = querySynonymsSrsContent.items;
 
-                        const itemsLen = querySynonymsSRSContent.items.length;
+                        const itemsLen = querySynonymsSrsContent.items.length;
                         for (let index = 0; index < itemsLen; index ++) {
                             // initiate result.
                             this.state.results[index] = '-';
