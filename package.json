@@ -4,7 +4,10 @@
   "private": true,
   "homepage": "http://solariswu.github.io/synonyms",
   "dependencies": {
-    "@aws-amplify/cli": "^4.5.0",
+    "@aws-amplify/cli": "^5.1.2",
+    "@babel/helper-builder-react-jsx": "^7.14.5",
+    "@babel/plugin-transform-react-jsx": "^7.14.5",
+    "@babel/plugin-transform-react-jsx-self": "^7.14.5",
     "@typescript-eslint/eslint-plugin": "^2.6.1",
     "@typescript-eslint/parser": "^2.6.1",
     "aws-amplify": "^1.2.4",
